@@ -1,0 +1,57 @@
+{
+  "status": "provisional: feature availability at assembly is unverified",
+  "source": "D:\\project\\IBMDatathon2026\\data\\processed\\claimclock_cohort_provisional.csv",
+  "outcome_cutoff": null,
+  "labels_mature_verified": false,
+  "target": "recorded dispute 1 through 90 days after assembly",
+  "features": [
+    "industry_code",
+    "wcio_cause_of_injury_code",
+    "wcio_nature_of_injury_code",
+    "wcio_part_of_body_code",
+    "county_of_injury",
+    "carrier_type",
+    "days_accident_to_assembly",
+    "assembly_month"
+  ],
+  "metadata_not_predictors": [
+    "claim_identifier",
+    "assembly_date"
+  ],
+  "target_column": "disputed_within_90d",
+  "splits": {
+    "train": {
+      "rows": 206460,
+      "positives": 11470,
+      "positive_rate": 0.05555555555555555
+    },
+    "validation": {
+      "rows": 206377,
+      "positives": 10817,
+      "positive_rate": 0.05241378641999835
+    },
+    "test": {
+      "rows": 268295,
+      "positives": 13601,
+      "positive_rate": 0.05069419855010343
+    }
+  },
+  "rows_purged_at_split_boundaries": 129369,
+  "positive_lead_days_quantiles": {
+    "0.0": 1.0,
+    "0.1": 9.0,
+    "0.25": 16.0,
+    "0.5": 28.0,
+    "0.75": 48.0,
+    "0.9": 68.0,
+    "1.0": 90.0
+  },
+  "limitations": [
+    "Without a confirmed cutoff, test labels are draft and must not support final performance claims.",
+    "Even a supplied cutoff requires independent verification of reporting completeness.",
+    "Carrier, county, industry and injury codes may reflect updates after assembly; verify against source documentation or historical snapshots.",
+    "2023-2025 restriction avoids pooling across the reported 2022 change, but does not verify stable definitions.",
+    "Wages, attorney representation, current status, hearing/process fields and later dates are excluded.",
+    "Use manifest features explicitly; never use identifiers or target as predictors."
+  ]
+}

@@ -1,0 +1,53 @@
+{
+  "status": "Provisional hackathon benchmark; availability at assembly and outcome completeness unverified",
+  "metrics": {
+    "validation": {
+      "logistic_regression": {
+        "claims": 206377,
+        "disputed_claims": 10817,
+        "contact_budget": 20638,
+        "disputed_claims_reached": 4835,
+        "recall_at_10pct": 0.44698160303226403,
+        "precision_at_10pct": 0.234276577187712,
+        "lift_over_random": 4.469751055770402,
+        "roc_auc": 0.8038697505628939,
+        "average_precision": 0.2575519837144183
+      },
+      "private_carrier_rule": {
+        "claims": 206377,
+        "disputed_claims": 10817,
+        "contact_budget": 20638,
+        "disputed_claims_reached": 1077,
+        "recall_at_10pct": 0.0995654987519645,
+        "precision_at_10pct": 0.0521852892722163,
+        "lift_over_random": 0.99564051438774,
+        "roc_auc": 0.4959568549183952,
+        "average_precision": 0.052018071336681994
+      }
+    },
+    "test": {
+      "logistic_regression": {
+        "claims": 268295,
+        "disputed_claims": 13601,
+        "contact_budget": 26830,
+        "disputed_claims_reached": 5932,
+        "recall_at_10pct": 0.4361444011469745,
+        "precision_at_10pct": 0.2210957882966828,
+        "lift_over_random": 4.361362732229874,
+        "roc_auc": 0.8027882232197308,
+        "average_precision": 0.25409306165328455
+      },
+      "private_carrier_rule": {
+        "claims": 268295,
+        "disputed_claims": 13601,
+        "contact_budget": 26830,
+        "disputed_claims_reached": 1323,
+        "recall_at_10pct": 0.09727225939269171,
+        "precision_at_10pct": 0.049310473350726795,
+        "lift_over_random": 0.9727044664093262,
+        "roc_auc": 0.49835069054296033,
+        "average_precision": 0.05053641483895873
+      }
+    }
+  }
+}

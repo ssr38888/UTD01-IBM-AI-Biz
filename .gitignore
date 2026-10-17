@@ -1,0 +1,10 @@
+__pycache__/
+*.py[cod]
+.venv/
+.env
+.env.*
+.aws/
+*.csv
+data/processed/
+data/modeling/baseline_results/*predictions.csv.gz
+*.joblib
