@@ -40,6 +40,7 @@ section.panel{background:var(--panel);border:1px solid var(--line);border-radius
 .tbl{overflow:auto;max-height:calc(100vh - 180px)}
 table{width:100%;border-collapse:collapse;font-variant-numeric:tabular-nums}
 th,td{text-align:left;padding:6px 8px;border-bottom:1px solid var(--line);vertical-align:top;white-space:nowrap}
+td:nth-child(6){white-space:normal;max-width:110px}
 th{position:sticky;top:0;background:var(--panel);font-size:11px;text-transform:uppercase;letter-spacing:.04em;color:var(--muted);z-index:1}
 th button{all:unset;cursor:pointer;display:inline-flex;gap:4px;align-items:center}
 th button:focus-visible{outline:2px solid var(--focus)}
@@ -54,10 +55,10 @@ tr.flag td.score .bar i{background:var(--flag)}
 .tag{display:inline-block;font-size:11px;padding:1px 6px;border-radius:3px;font-weight:600}
 .tag.flag{background:var(--flag-bg);color:var(--flag)} .tag.ap{background:var(--ok-bg);color:var(--ok)} .tag.hd{background:var(--hold-bg);color:var(--hold)}
 .tag.syn{background:var(--warn-bg);color:var(--warn);font-weight:500}
-.chips{white-space:normal;min-width:260px}
+.chips{white-space:normal;min-width:200px}
 .chip{display:inline-block;white-space:nowrap;font-size:11px;background:var(--chip);padding:1px 7px;border-radius:999px;margin:1px 3px 1px 0;color:var(--ink)}
 .muted{color:var(--muted)}
-.detail{padding:12px 14px;overflow:auto}
+.detail{padding:12px 14px;overflow:auto;max-height:40vh;flex:0 0 auto}
 .detail h3{font-size:12px;text-transform:uppercase;letter-spacing:.04em;color:var(--muted);margin:10px 0 4px;display:flex;gap:8px;align-items:center}
 .detail h3:first-child{margin-top:0}
 dl{display:grid;grid-template-columns:max-content 1fr max-content 1fr;gap:3px 14px;margin:0}
@@ -108,7 +109,7 @@ footer{padding:8px 20px;font-size:12px;color:var(--muted);border-top:1px solid v
           <th><button data-k="score">Dispute risk <span class="dir">▼</span></button></th>
           <th><button data-k="rank_pct">Pctl <span class="dir"></span></button></th>
           <th>Top reasons</th>
-          <th><button data-k="days_accident_to_assembly">Days since accident <span class="dir"></span></button></th>
+          <th><button data-k="days_accident_to_assembly" title="Days from accident to assembly">Days <span class="dir"></span></button></th>
           <th><button data-k="carrier_type">Carrier <span class="dir"></span></button></th>
           <th><button data-k="county">County <span class="dir"></span></button></th>
           <th>Status</th>
@@ -129,7 +130,7 @@ footer{padding:8px 20px;font-size:12px;color:var(--muted);border-top:1px solid v
     <div class="detail" id="detail"><div class="empty">Select a claim.</div></div>
     <div class="actions">
       <button class="btn primary" id="draft" type="button" disabled>Draft letter</button>
-      <button class="btn" id="approve" type="button" disabled title="Requires advocate review">Approve outreach</button>
+      <button class="btn" id="approve" type="button" disabled>Approve outreach</button>
       <button class="btn" id="hold" type="button" disabled>Hold</button>
       <span class="muted" id="hint"></span>
     </div>

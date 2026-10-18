@@ -11,3 +11,4 @@ data/modeling/baseline_results/*predictions.csv.gz
 b_platform/artifacts/features.npz
 b_platform/artifacts/hour_zero.txt
 b_platform/artifacts/benchmark.json
+!c_product/fixtures/scores_sample.csv

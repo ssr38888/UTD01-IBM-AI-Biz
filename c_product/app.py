@@ -121,6 +121,8 @@ def read_json(path):
 
 
 class Handler(BaseHTTPRequestHandler):
+    protocol_version = "HTTP/1.1"  # chunked streaming needs 1.1; every other response sets Content-Length
+
     def send_json(self, obj, status=200):
         body = json.dumps(obj).encode()
         self.send_response(status)
