@@ -1,0 +1,301 @@
+claim_id,assembly_date,score,rank_pct,top1,top2,top3,lead_days_est,county,carrier_type,industry_code,cause_code,nature_code,body_part_code,days_accident_to_assembly,y
+7301782,2025-03-10,0.1971,88.67,Carrier type: 3A. SELF PUBLIC,Days accident to assembly: 192,Industry: 71,17,WESTCHESTER,3A. SELF PUBLIC,44,81,49,18,192,0
+6530470,2025-03-12,0.0359,27.33,Carrier type: 4A. SELF PRIVATE,Cause of injury: code 56,,16,QUEENS,4A. SELF PRIVATE,49,56,49,53,,0
+6831643,2025-03-11,0.0083,3.67,Cause of injury: code 75,Carrier type: 3A. SELF PUBLIC,,35,ORANGE,3A. SELF PUBLIC,81,75,,56,,0
+7104306,2025-03-11,0.1243,74.0,Carrier type: 2A. SIF,Days accident to assembly: 61,Industry: 81,60,QUEENS,2A. SIF,48,97,07,53,61,0
+7483124,2025-03-11,0.0178,11.0,Cause of injury: code 60,Days accident to assembly: 293,,52,ERIE,1A. PRIVATE,81,60,28,18,293,0
+7167026,2025-03-11,0.0829,56.33,Days accident to assembly: missing,Carrier type: 1A. PRIVATE,Cause of injury: code 97,70,NEW YORK,1A. PRIVATE,42,97,28,56,,0
+7239205,2025-03-12,0.0833,57.0,Carrier type: 3A. SELF PUBLIC,Days accident to assembly: 4,Cause of injury: code 79,56,ERIE,3A. SELF PUBLIC,33,79,49,56,4,0
+6840661,2025-03-11,0.0576,39.67,Industry: 23,Carrier type: 3A. SELF PUBLIC,Cause of injury: code 79,45,KINGS,3A. SELF PUBLIC,33,79,43,36,,0
+6512054,2025-03-10,0.0256,19.33,Carrier type: 1A. PRIVATE,Industry: 42,,15,ALBANY,1A. PRIVATE,49,31,90,90,,0
+6942635,2025-03-10,0.0195,13.33,Days accident to assembly: 167,Carrier type: 2A. SIF,,68,ALBANY,2A. SIF,62,29,43,36,167,0
+7048457,2025-03-12,0.005,1.33,Industry: 48,Carrier type: 3A. SELF PUBLIC,,54,SUFFOLK,3A. SELF PUBLIC,49,32,40,90,,0
+7026613,2025-03-10,0.0281,21.0,Days accident to assembly: 314,Cause of injury: code 19,,70,WESTCHESTER,1A. PRIVATE,44,19,01,38,314,0
+6543784,2025-03-11,0.2423,94.33,Cause of injury: code 25,Industry: 49,Days accident to assembly: 43,22,WESTCHESTER,1A. PRIVATE,48,25,25,36,43,0
+7285933,2025-03-11,0.1453,81.67,Industry: 62,Cause of injury: code 56,Carrier type: 4A. SELF PRIVATE,70,SUFFOLK,4A. SELF PRIVATE,23,56,04,37,15,0
+6723293,2025-03-10,0.0741,50.67,Days accident to assembly: 26,Carrier type: 1A. PRIVATE,Industry: 71,13,ORANGE,1A. PRIVATE,61,26,28,-9,26,0
+7230865,2025-03-10,0.0189,12.0,Industry: 62,Carrier type: 3A. SELF PUBLIC,,16,QUEENS,3A. SELF PUBLIC,92,60,07,18,44,0
+7425717,2025-03-10,0.0193,12.67,Industry: 33,Cause of injury: code 60,,20,WESTCHESTER,1A. PRIVATE,44,60,04,53,,0
+7005908,2025-03-12,0.0079,3.0,Days accident to assembly: 48,Cause of injury: code 75,,20,QUEENS,2A. SIF,48,75,49,36,48,0
+6704410,2025-03-10,0.0519,37.33,Days accident to assembly: 2,Cause of injury: code 79,Industry: 45,59,SUFFOLK,1A. PRIVATE,71,79,43,35,2,0
+6563583,2025-03-11,0.0245,18.33,Carrier type: 3A. SELF PUBLIC,Industry: 48,,51,ALBANY,3A. SELF PUBLIC,81,26,25,54,398,0
+6595264,2025-03-10,0.0436,31.0,Industry: 48,Days accident to assembly: 42,,28,SUFFOLK,1A. PRIVATE,61,19,28,18,42,1
+6757613,2025-03-10,0.1024,66.67,Carrier type: 1A. PRIVATE,Industry: 56,Days accident to assembly: missing,40,SUFFOLK,1A. PRIVATE,33,56,07,33,,0
+7285309,2025-03-12,0.1518,83.0,Days accident to assembly: 18,Industry: 45,Carrier type: 2A. SIF,32,ORANGE,2A. SIF,44,99,10,55,18,1
+6961652,2025-03-12,0.0079,3.33,Days accident to assembly: 60,Industry: 45,,15,SUFFOLK,2A. SIF,44,31,10,38,60,0
+6749213,2025-03-10,0.0863,59.0,Days accident to assembly: 57,Industry: 62,Cause of injury: code 32,22,QUEENS,1A. PRIVATE,42,32,10,-9,57,0
+7457920,2025-03-10,0.0467,34.0,Carrier type: 1A. PRIVATE,Days accident to assembly: 1,,39,WESTCHESTER,1A. PRIVATE,61,31,,42,1,1
+6521773,2025-03-11,0.2233,91.67,Days accident to assembly: missing,Industry: 33,Carrier type: 1A. PRIVATE,28,ERIE,1A. PRIVATE,44,79,40,35,,1
+7487224,2025-03-10,0.0475,34.67,Industry: 61,Carrier type: 2A. SIF,,64,ALBANY,2A. SIF,49,57,25,90,50,0
+7165258,2025-03-10,0.1021,66.33,Days accident to assembly: 51,Industry: 23,Cause of injury: code 56,17,BRONX,1A. PRIVATE,92,56,01,54,51,0
+6556012,2025-03-12,0.1269,76.67,Industry: 56,Cause of injury: code 32,Days accident to assembly: missing,15,NASSAU,2A. SIF,56,32,52,90,,0
+7087472,2025-03-10,0.0367,27.67,Industry: 56,Cause of injury: code 60,,64,ALBANY,1A. PRIVATE,61,60,10,18,18,0
+7143016,2025-03-10,0.1034,67.67,Cause of injury: code 81,Carrier type: 1A. PRIVATE,Industry: 56,63,NASSAU,1A. PRIVATE,42,81,40,54,,0
+7218436,2025-03-11,0.0882,59.67,Days accident to assembly: 396,Cause of injury: code 56,Carrier type: 3A. SELF PUBLIC,13,SUFFOLK,3A. SELF PUBLIC,61,56,52,42,396,0
+7115139,2025-03-11,0.05,36.0,Industry: 48,Carrier type: 2A. SIF,Cause of injury: code 75,70,QUEENS,2A. SIF,48,75,07,42,0,0
+6943700,2025-03-11,0.1269,76.33,Cause of injury: code 31,Days accident to assembly: 325,Industry: 49,62,BRONX,2A. SIF,71,31,25,35,325,0
+7098045,2025-03-10,0.038,28.33,Days accident to assembly: missing,Industry: 62,,68,BRONX,2A. SIF,42,26,40,55,,0
+6850757,2025-03-11,0.2387,93.33,Carrier type: 1A. PRIVATE,Cause of injury: code 33,Industry: 62,63,KINGS,1A. PRIVATE,48,33,,53,26,1
+7321657,2025-03-10,0.0385,29.33,Carrier type: 3A. SELF PUBLIC,Days accident to assembly: missing,,66,NASSAU,3A. SELF PUBLIC,48,25,04,55,,0
+6653723,2025-03-10,0.0206,14.33,Days accident to assembly: 30,Cause of injury: code 45,,56,MONROE,3A. SELF PUBLIC,62,45,25,34,30,0
+6807147,2025-03-11,0.0125,7.0,Carrier type: 4A. SELF PRIVATE,Cause of injury: code 29,,34,ERIE,4A. SELF PRIVATE,56,29,90,18,,0
+6533977,2025-03-12,0.0804,55.0,Carrier type: 1A. PRIVATE,Industry: 42,Days accident to assembly: 240,49,ORANGE,1A. PRIVATE,92,99,52,35,240,0
+6774617,2025-03-10,0.0963,62.67,Industry: 56,Days accident to assembly: 39,Carrier type: 3A. SELF PUBLIC,15,KINGS,3A. SELF PUBLIC,44,45,59,33,39,0
+7050938,2025-03-11,0.0191,12.33,Days accident to assembly: 57,Industry: 92,,39,QUEENS,1A. PRIVATE,61,56,40,33,57,0
+7222425,2025-03-12,0.0696,48.67,Days accident to assembly: 15,Industry: 92,Cause of injury: code 97,59,NASSAU,2A. SIF,92,97,25,42,15,0
+6533436,2025-03-12,0.005,1.67,Cause of injury: code 33,Industry: 23,,30,ALBANY,3A. SELF PUBLIC,61,33,90,53,33,0
+6721736,2025-03-12,0.0796,54.33,Carrier type: 3A. SELF PUBLIC,Industry: 62,Days accident to assembly: missing,52,WESTCHESTER,3A. SELF PUBLIC,71,56,40,90,,0
+7090305,2025-03-11,0.0816,56.0,Cause of injury: code 25,Days accident to assembly: missing,Carrier type: 1A. PRIVATE,19,NEW YORK,1A. PRIVATE,61,25,43,37,,0
+6944339,2025-03-10,0.1186,72.33,Days accident to assembly: 372,Industry: 44,Cause of injury: code 99,19,SUFFOLK,3A. SELF PUBLIC,23,99,01,90,372,0
+6886787,2025-03-10,0.1411,80.33,Cause of injury: code 29,Industry: 23,Days accident to assembly: 42,67,KINGS,1A. PRIVATE,42,29,59,34,42,0
+7380803,2025-03-10,0.1495,82.0,Cause of injury: code 97,Carrier type: 2A. SIF,Industry: 56,40,KINGS,2A. SIF,23,97,10,55,,0
+6762624,2025-03-11,0.0874,59.33,Days accident to assembly: missing,Industry: 61,Carrier type: 1A. PRIVATE,47,QUEENS,1A. PRIVATE,62,57,10,90,,0
+7029057,2025-03-12,0.0457,33.0,Carrier type: 1A. PRIVATE,Days accident to assembly: 56,,53,NEW YORK,1A. PRIVATE,23,56,28,54,56,0
+7144108,2025-03-12,0.2416,94.0,Days accident to assembly: 133,Cause of injury: code 74,Industry: 81,55,KINGS,1A. PRIVATE,81,74,04,38,133,0
+6644921,2025-03-12,0.1153,70.33,Carrier type: 2A. SIF,Cause of injury: code 25,Days accident to assembly: missing,12,NASSAU,2A. SIF,71,25,40,53,,0
+7205152,2025-03-12,0.3624,99.0,Carrier type: 1A. PRIVATE,Industry: 61,Days accident to assembly: 29,24,NEW YORK,1A. PRIVATE,92,29,07,55,29,1
+6792968,2025-03-10,0.0942,62.0,Industry: 81,Days accident to assembly: 39,Cause of injury: code 25,48,BRONX,3A. SELF PUBLIC,72,25,59,37,39,0
+7068949,2025-03-11,0.1174,71.0,Industry: 44,Days accident to assembly: missing,Carrier type: 3A. SELF PUBLIC,66,BRONX,3A. SELF PUBLIC,81,57,25,14,,0
+6985659,2025-03-10,0.0751,51.67,Industry: 42,Cause of injury: code 26,Carrier type: 1A. PRIVATE,37,SUFFOLK,1A. PRIVATE,81,26,49,42,91,0
+7274931,2025-03-10,0.0909,60.67,Carrier type: 2A. SIF,Industry: 72,Cause of injury: code 60,59,ALBANY,2A. SIF,48,60,28,33,241,0
+6556790,2025-03-12,0.0162,9.67,Carrier type: 4A. SELF PRIVATE,Industry: 23,,17,QUEENS,4A. SELF PRIVATE,42,45,43,90,38,0
+6512972,2025-03-11,0.0508,37.0,Days accident to assembly: 236,Industry: 49,Carrier type: 1A. PRIVATE,35,WESTCHESTER,1A. PRIVATE,44,60,52,-9,236,0
+7160025,2025-03-12,0.0831,56.67,Days accident to assembly: 275,Cause of injury: code 56,Carrier type: 2A. SIF,33,NEW YORK,2A. SIF,56,56,01,36,275,0
+6906723,2025-03-11,0.0937,61.33,Carrier type: 1A. PRIVATE,Days accident to assembly: 86,Cause of injury: code 56,34,NEW YORK,1A. PRIVATE,62,56,43,18,86,0
+6783778,2025-03-11,0.1133,69.67,Industry: 72,Days accident to assembly: missing,Carrier type: 1A. PRIVATE,46,ALBANY,1A. PRIVATE,62,56,37,35,,0
+7348579,2025-03-11,0.0194,13.0,Cause of injury: code 57,Carrier type: 1A. PRIVATE,,68,QUEENS,1A. PRIVATE,62,57,07,33,215,0
+6894375,2025-03-10,0.0354,26.0,Carrier type: 1A. PRIVATE,Days accident to assembly: 230,,32,SUFFOLK,1A. PRIVATE,49,26,43,-9,230,0
+6722648,2025-03-12,0.202,89.0,Industry: 81,Cause of injury: code 45,Days accident to assembly: missing,55,NEW YORK,2A. SIF,42,45,52,56,,0
+6588577,2025-03-11,0.1659,86.0,Industry: 92,Cause of injury: code 75,Days accident to assembly: 22,41,ORANGE,1A. PRIVATE,56,75,49,56,22,1
+7467435,2025-03-11,0.1183,72.0,Industry: 23,Days accident to assembly: 288,Carrier type: 1A. PRIVATE,43,NEW YORK,1A. PRIVATE,49,81,10,35,288,0
+7043426,2025-03-10,0.0116,6.33,Industry: 45,Cause of injury: code 45,,55,ALBANY,1A. PRIVATE,49,45,49,90,216,0
+7037572,2025-03-10,0.061,43.33,Days accident to assembly: 14,Industry: 44,Carrier type: 1A. PRIVATE,67,KINGS,1A. PRIVATE,45,75,01,38,14,0
+6952280,2025-03-12,0.0838,57.67,Cause of injury: code 19,Carrier type: 3A. SELF PUBLIC,Days accident to assembly: 42,41,ALBANY,3A. SELF PUBLIC,81,19,01,56,42,0
+7126900,2025-03-12,0.0762,52.67,Industry: 81,Carrier type: 1A. PRIVATE,Days accident to assembly: missing,16,ERIE,1A. PRIVATE,48,45,10,53,,0
+7102449,2025-03-10,0.3368,98.33,Industry: 56,Carrier type: 1A. PRIVATE,Days accident to assembly: 30,64,BRONX,1A. PRIVATE,61,81,28,-9,30,1
+7226445,2025-03-10,0.0175,10.67,Industry: 49,Cause of injury: code 31,,25,MONROE,4A. SELF PRIVATE,92,31,04,54,,0
+7075493,2025-03-11,0.2957,97.0,Industry: 49,Cause of injury: code 81,Carrier type: 2A. SIF,32,ORANGE,2A. SIF,92,81,52,90,46,0
+6708079,2025-03-12,0.0857,58.67,Cause of injury: code 57,Carrier type: 1A. PRIVATE,Days accident to assembly: missing,67,WESTCHESTER,1A. PRIVATE,33,57,28,38,,0
+6658293,2025-03-10,0.2041,89.33,Days accident to assembly: 46,Cause of injury: code 45,Industry: 33,21,BRONX,1A. PRIVATE,81,45,59,55,46,1
+7492126,2025-03-12,0.0315,23.33,Industry: 49,Cause of injury: code 19,,33,WESTCHESTER,1A. PRIVATE,42,19,,14,56,0
+7239515,2025-03-10,0.0591,41.33,Cause of injury: code 99,Days accident to assembly: 182,Carrier type: 1A. PRIVATE,42,NASSAU,1A. PRIVATE,72,99,90,90,182,0
+7255720,2025-03-11,0.0226,15.67,Days accident to assembly: 93,Carrier type: 1A. PRIVATE,,26,KINGS,1A. PRIVATE,62,97,59,35,93,0
+6903947,2025-03-12,0.0119,6.67,Days accident to assembly: 32,Cause of injury: code 19,,30,QUEENS,3A. SELF PUBLIC,44,19,59,14,32,0
+6508923,2025-03-11,0.1045,68.0,Industry: 45,Cause of injury: code 60,Days accident to assembly: 23,46,SUFFOLK,4A. SELF PRIVATE,23,60,01,54,23,0
+7065751,2025-03-10,0.058,40.67,Days accident to assembly: missing,Carrier type: 1A. PRIVATE,Industry: 45,50,QUEENS,1A. PRIVATE,61,26,07,35,,0
+7113704,2025-03-11,0.0356,26.33,Days accident to assembly: missing,Carrier type: 3A. SELF PUBLIC,,27,NASSAU,3A. SELF PUBLIC,42,31,37,37,,1
+7263240,2025-03-12,0.0421,30.33,Cause of injury: code 32,Days accident to assembly: 51,,49,MONROE,3A. SELF PUBLIC,23,32,52,-9,51,0
+6656723,2025-03-10,0.0053,2.0,Carrier type: 2A. SIF,Cause of injury: code 60,,30,ORANGE,2A. SIF,33,60,49,-9,,0
+7279101,2025-03-12,0.0463,33.33,Days accident to assembly: 14,Industry: 56,,64,ALBANY,1A. PRIVATE,23,60,59,42,14,0
+7306039,2025-03-12,0.0606,42.67,Carrier type: 1A. PRIVATE,Days accident to assembly: 258,Cause of injury: code 19,49,WESTCHESTER,1A. PRIVATE,45,19,59,56,258,0
+7382497,2025-03-12,0.2385,93.0,Industry: 81,Days accident to assembly: missing,Cause of injury: code 32,62,NEW YORK,1A. PRIVATE,23,32,28,56,,0
+7181949,2025-03-11,0.0215,15.33,Cause of injury: code 31,Carrier type: 1A. PRIVATE,,36,NASSAU,1A. PRIVATE,56,31,04,35,279,0
+6954710,2025-03-10,0.045,32.0,Industry: 56,Days accident to assembly: 23,,38,SUFFOLK,2A. SIF,44,29,10,34,23,0
+7321230,2025-03-12,0.0692,48.33,Days accident to assembly: 77,Industry: 33,Cause of injury: code 32,40,MONROE,1A. PRIVATE,42,32,01,-9,77,0
+7470033,2025-03-12,0.053,38.0,Carrier type: 1A. PRIVATE,Days accident to assembly: missing,Industry: 71,44,QUEENS,1A. PRIVATE,45,29,52,56,,0
+6592728,2025-03-11,0.2398,93.67,Carrier type: 1A. PRIVATE,Days accident to assembly: 393,Industry: 42,33,QUEENS,1A. PRIVATE,45,32,07,90,393,1
+6814124,2025-03-11,0.0099,4.67,Cause of injury: code 56,Carrier type: 3A. SELF PUBLIC,,50,ORANGE,3A. SELF PUBLIC,33,56,10,42,110,0
+7400167,2025-03-10,0.1265,76.0,Cause of injury: code 60,Industry: 62,Days accident to assembly: 7,17,NASSAU,1A. PRIVATE,49,60,10,42,7,0
+6575491,2025-03-11,0.0466,33.67,Days accident to assembly: 46,Cause of injury: code 99,,54,QUEENS,1A. PRIVATE,56,99,04,55,46,0
+7156370,2025-03-10,0.157,83.67,Industry: 56,Cause of injury: code 33,Carrier type: 2A. SIF,15,WESTCHESTER,2A. SIF,81,33,90,-9,52,0
+7457214,2025-03-12,0.0057,2.67,Industry: 33,Carrier type: 3A. SELF PUBLIC,,13,QUEENS,3A. SELF PUBLIC,81,25,04,-9,,0
+6875227,2025-03-11,0.005,1.0,Industry: 61,Days accident to assembly: 10,,64,NEW YORK,3A. SELF PUBLIC,23,19,43,34,10,0
+7035802,2025-03-11,0.0385,29.67,Carrier type: 2A. SIF,Cause of injury: code 45,,68,ERIE,2A. SIF,33,45,52,38,160,0
+6533442,2025-03-10,0.023,17.0,Carrier type: 1A. PRIVATE,Industry: 44,,31,ALBANY,1A. PRIVATE,81,31,28,54,84,0
+7116170,2025-03-12,0.1385,79.67,Industry: 42,Days accident to assembly: 400,Carrier type: 4A. SELF PRIVATE,41,MONROE,4A. SELF PRIVATE,44,29,,18,400,0
+6935825,2025-03-11,0.0382,28.67,Industry: 44,Days accident to assembly: 27,,69,KINGS,1A. PRIVATE,62,81,07,37,27,0
+6946640,2025-03-11,0.1207,73.33,Carrier type: 1A. PRIVATE,Days accident to assembly: 289,Industry: 71,18,WESTCHESTER,1A. PRIVATE,42,99,01,54,289,0
+6531010,2025-03-11,0.0283,21.67,Days accident to assembly: missing,Carrier type: 3A. SELF PUBLIC,,35,ALBANY,3A. SELF PUBLIC,42,25,37,37,,0
+7191694,2025-03-12,0.0808,55.33,Cause of injury: code 19,Carrier type: 4A. SELF PRIVATE,Industry: 81,38,QUEENS,4A. SELF PRIVATE,49,19,52,54,,0
+7178748,2025-03-11,0.2536,94.67,Industry: 81,Carrier type: 2A. SIF,Cause of injury: code 32,64,NEW YORK,2A. SIF,72,32,40,35,368,1
+7149358,2025-03-12,0.0181,11.33,Carrier type: 2A. SIF,Industry: 92,,14,BRONX,2A. SIF,72,60,10,38,21,0
+6987425,2025-03-11,0.1212,73.67,Days accident to assembly: missing,Industry: 61,Cause of injury: code 81,43,ORANGE,1A. PRIVATE,56,81,25,38,,1
+6652856,2025-03-11,0.0155,8.67,Cause of injury: code 32,Industry: 81,,61,NASSAU,2A. SIF,56,32,10,56,,0
+7111680,2025-03-11,0.207,90.33,Cause of injury: code 45,Industry: 33,Carrier type: 1A. PRIVATE,17,ORANGE,1A. PRIVATE,61,45,59,18,,1
+7128283,2025-03-12,0.077,53.33,Cause of injury: code 99,Days accident to assembly: missing,Industry: 42,33,SUFFOLK,1A. PRIVATE,62,99,40,18,,0
+7290160,2025-03-10,0.0937,61.0,Industry: 92,Days accident to assembly: 10,Cause of injury: code 75,63,NASSAU,3A. SELF PUBLIC,48,75,49,54,10,0
+7281952,2025-03-10,0.0598,41.67,Cause of injury: code 74,Industry: 56,Days accident to assembly: missing,59,WESTCHESTER,1A. PRIVATE,48,74,25,53,,0
+6913570,2025-03-12,0.0676,47.67,Carrier type: 1A. PRIVATE,Industry: 72,Cause of injury: code 19,36,BRONX,1A. PRIVATE,92,19,40,-9,162,0
+6832497,2025-03-10,0.0652,45.67,Days accident to assembly: 335,Industry: 42,Cause of injury: code 81,57,BRONX,2A. SIF,61,81,01,33,335,1
+7399893,2025-03-12,0.0657,46.0,Cause of injury: code 56,Industry: 92,Carrier type: 3A. SELF PUBLIC,70,MONROE,3A. SELF PUBLIC,61,56,10,56,393,0
+7449903,2025-03-10,0.005,0.33,Industry: 92,Carrier type: 1A. PRIVATE,,61,KINGS,1A. PRIVATE,48,29,25,42,58,0
+7312625,2025-03-11,0.2654,95.0,Days accident to assembly: 351,Industry: 56,Carrier type: 2A. SIF,17,KINGS,2A. SIF,72,29,25,18,351,1
+6816422,2025-03-12,0.3588,98.67,Days accident to assembly: missing,Cause of injury: code 32,Carrier type: 3A. SELF PUBLIC,33,MONROE,3A. SELF PUBLIC,81,32,49,56,,1
+7158237,2025-03-11,0.0641,44.67,Industry: 62,Cause of injury: code 26,Carrier type: 3A. SELF PUBLIC,51,ALBANY,3A. SELF PUBLIC,81,26,59,33,278,0
+7181511,2025-03-12,0.0746,51.0,Industry: 45,Days accident to assembly: 4,Carrier type: 3A. SELF PUBLIC,54,MONROE,3A. SELF PUBLIC,44,81,28,90,4,0
+7368249,2025-03-12,0.0397,30.0,Cause of injury: code 33,Industry: 71,,65,QUEENS,3A. SELF PUBLIC,61,33,01,14,42,0
+6971140,2025-03-11,0.0534,38.33,Industry: 23,Carrier type: 1A. PRIVATE,Cause of injury: code 25,52,WESTCHESTER,1A. PRIVATE,81,25,25,42,45,0
+7240221,2025-03-12,0.1288,77.0,Cause of injury: code 74,Industry: 33,Days accident to assembly: missing,15,ALBANY,3A. SELF PUBLIC,56,74,01,38,,0
+6948185,2025-03-10,0.1253,75.33,Carrier type: 1A. PRIVATE,Days accident to assembly: missing,Cause of injury: code 99,20,MONROE,1A. PRIVATE,44,99,40,53,,1
+7389307,2025-03-11,0.1825,87.67,Cause of injury: code 26,Carrier type: 3A. SELF PUBLIC,Industry: 48,24,NASSAU,3A. SELF PUBLIC,33,26,04,56,42,0
+7033627,2025-03-11,0.1098,69.33,Carrier type: 1A. PRIVATE,Cause of injury: code 60,Industry: 42,66,ALBANY,1A. PRIVATE,44,60,43,54,36,0
+7289191,2025-03-12,0.0319,23.67,Carrier type: 1A. PRIVATE,Cause of injury: code 19,,16,BRONX,1A. PRIVATE,23,19,43,37,77,0
+7451253,2025-03-12,0.0125,7.33,Cause of injury: code 75,Carrier type: 3A. SELF PUBLIC,,53,WESTCHESTER,3A. SELF PUBLIC,45,75,43,37,,0
+6954789,2025-03-11,0.0501,36.33,Industry: 44,Days accident to assembly: 372,Carrier type: 4A. SELF PRIVATE,66,ALBANY,4A. SELF PRIVATE,92,25,52,42,372,0
+7135885,2025-03-12,0.009,4.0,Industry: 42,Cause of injury: code 81,,48,NEW YORK,1A. PRIVATE,42,81,40,-9,154,0
+7146655,2025-03-10,0.1015,66.0,Industry: 71,Cause of injury: code 74,Days accident to assembly: 97,21,ALBANY,1A. PRIVATE,33,74,04,37,97,0
+7338186,2025-03-10,0.005,0.0,Industry: 56,Days accident to assembly: 42,,58,ALBANY,4A. SELF PRIVATE,92,26,90,37,42,0
+7194939,2025-03-12,0.0227,16.33,Days accident to assembly: 36,Carrier type: 1A. PRIVATE,,17,NEW YORK,1A. PRIVATE,62,33,07,33,36,0
+7291396,2025-03-10,0.0992,65.0,Carrier type: 3A. SELF PUBLIC,Days accident to assembly: 41,Industry: 56,57,ORANGE,3A. SELF PUBLIC,61,25,04,42,41,0
+7400315,2025-03-12,0.0333,24.33,Days accident to assembly: 76,Industry: 49,,58,ERIE,1A. PRIVATE,23,31,10,33,76,0
+6613694,2025-03-12,0.0941,61.67,Carrier type: 1A. PRIVATE,Industry: 71,Cause of injury: code 45,55,BRONX,1A. PRIVATE,72,45,28,35,19,0
+6652081,2025-03-12,0.269,95.33,Carrier type: 1A. PRIVATE,Industry: 71,Days accident to assembly: missing,36,NEW YORK,1A. PRIVATE,81,57,52,54,,0
+7465637,2025-03-12,0.1084,69.0,Carrier type: 1A. PRIVATE,Industry: 72,Days accident to assembly: 26,64,NEW YORK,1A. PRIVATE,62,74,25,14,26,0
+6937661,2025-03-12,0.0608,43.0,Carrier type: 1A. PRIVATE,Industry: 56,Cause of injury: code 60,59,WESTCHESTER,1A. PRIVATE,49,60,59,35,30,1
+6951515,2025-03-10,0.062,43.67,Days accident to assembly: 242,Cause of injury: code 32,Industry: 92,35,SUFFOLK,2A. SIF,42,32,,34,242,0
+7426295,2025-03-10,0.1604,85.0,Carrier type: 1A. PRIVATE,Days accident to assembly: 25,Cause of injury: code 79,20,ERIE,1A. PRIVATE,49,79,90,38,25,0
+6593466,2025-03-12,0.0114,6.0,Industry: 48,Cause of injury: code 79,,30,QUEENS,1A. PRIVATE,72,79,90,36,,0
+6866833,2025-03-12,0.0987,64.67,Industry: 45,Carrier type: 1A. PRIVATE,Cause of injury: code 19,47,MONROE,1A. PRIVATE,42,19,43,33,245,0
+7339211,2025-03-11,0.0235,17.67,Days accident to assembly: missing,Industry: 92,,40,KINGS,2A. SIF,49,57,90,34,,0
+7499020,2025-03-10,0.005,0.67,Days accident to assembly: 24,Cause of injury: code 45,,35,KINGS,2A. SIF,71,45,07,33,24,0
+7106587,2025-03-10,0.0499,35.67,Industry: 92,Carrier type: 4A. SELF PRIVATE,,21,NASSAU,4A. SELF PRIVATE,61,74,25,56,42,0
+7025240,2025-03-11,0.1322,78.33,Industry: 44,Days accident to assembly: missing,Cause of injury: code 74,37,ALBANY,2A. SIF,56,74,01,42,,0
+7480480,2025-03-11,0.2343,92.67,Days accident to assembly: 212,Cause of injury: code 79,Industry: 33,41,ERIE,3A. SELF PUBLIC,23,79,,42,212,0
+6933097,2025-03-11,0.0263,20.67,Days accident to assembly: 52,Carrier type: 4A. SELF PRIVATE,,67,SUFFOLK,4A. SELF PRIVATE,62,45,28,14,52,0
+6553026,2025-03-12,0.0347,25.0,Days accident to assembly: 196,Carrier type: 1A. PRIVATE,,18,ALBANY,1A. PRIVATE,23,57,07,35,196,0
+6557995,2025-03-10,0.0348,25.33,Industry: 44,Days accident to assembly: missing,,13,NASSAU,1A. PRIVATE,45,26,37,33,,0
+6918678,2025-03-11,0.0759,52.33,Carrier type: 1A. PRIVATE,Cause of injury: code 25,Days accident to assembly: missing,39,NEW YORK,1A. PRIVATE,56,25,28,55,,0
+7306594,2025-03-11,0.0747,51.33,Carrier type: 1A. PRIVATE,Cause of injury: code 99,Industry: 33,36,WESTCHESTER,1A. PRIVATE,92,99,10,36,25,0
+7010483,2025-03-11,0.0227,16.0,Carrier type: 3A. SELF PUBLIC,Cause of injury: code 31,,66,SUFFOLK,3A. SELF PUBLIC,49,31,01,33,1,0
+7215745,2025-03-10,0.0804,54.67,Cause of injury: code 31,Days accident to assembly: 326,Industry: 33,59,NEW YORK,3A. SELF PUBLIC,42,31,10,34,326,0
+6670026,2025-03-12,0.2063,90.0,Industry: 72,Days accident to assembly: missing,Carrier type: 4A. SELF PRIVATE,31,MONROE,4A. SELF PRIVATE,61,26,37,38,,0
+6660173,2025-03-10,0.0658,46.33,Industry: 71,Cause of injury: code 19,Days accident to assembly: 248,31,ERIE,1A. PRIVATE,62,19,10,54,248,0
+6639756,2025-03-11,0.1166,70.67,Industry: 92,Days accident to assembly: 327,Cause of injury: code 75,67,ALBANY,3A. SELF PUBLIC,48,75,40,42,327,0
+7259726,2025-03-12,0.2817,96.33,Industry: 23,Cause of injury: code 74,Carrier type: 1A. PRIVATE,17,ORANGE,1A. PRIVATE,92,74,28,55,258,1
+7434568,2025-03-10,0.1182,71.67,Days accident to assembly: 6,Cause of injury: code 57,Industry: 33,59,BRONX,1A. PRIVATE,81,57,52,38,6,0
+7326920,2025-03-12,0.0424,30.67,Cause of injury: code 32,Days accident to assembly: 162,,27,KINGS,4A. SELF PRIVATE,81,32,90,33,162,0
+6667145,2025-03-11,0.1326,78.67,Industry: 44,Days accident to assembly: missing,Carrier type: 4A. SELF PRIVATE,49,KINGS,4A. SELF PRIVATE,72,56,52,90,,0
+7181197,2025-03-10,0.0942,62.33,Industry: 48,Carrier type: 4A. SELF PRIVATE,Days accident to assembly: 33,63,SUFFOLK,4A. SELF PRIVATE,33,99,,-9,33,1
+7285381,2025-03-12,0.1319,78.0,Industry: 81,Carrier type: 1A. PRIVATE,Days accident to assembly: 238,24,WESTCHESTER,1A. PRIVATE,92,75,07,54,238,0
+7374716,2025-03-10,0.0545,38.67,Carrier type: 1A. PRIVATE,Industry: 42,Cause of injury: code 99,20,QUEENS,1A. PRIVATE,81,99,43,90,18,0
+6737865,2025-03-10,0.0908,60.33,Cause of injury: code 81,Days accident to assembly: 370,Industry: 72,42,NASSAU,4A. SELF PRIVATE,72,81,40,56,370,0
+7117707,2025-03-10,0.0175,10.33,Carrier type: 1A. PRIVATE,Days accident to assembly: missing,,20,NASSAU,1A. PRIVATE,72,81,01,54,,0
+7457794,2025-03-10,0.0548,39.0,Days accident to assembly: 395,Cause of injury: code 19,Carrier type: 2A. SIF,68,MONROE,2A. SIF,56,19,40,37,395,1
+7232544,2025-03-11,0.023,17.33,Industry: 92,Carrier type: 1A. PRIVATE,,14,MONROE,1A. PRIVATE,42,60,10,54,196,0
+6761819,2025-03-11,0.2813,96.0,Carrier type: 2A. SIF,Industry: 42,Days accident to assembly: 11,15,KINGS,2A. SIF,72,45,43,55,11,1
+6929694,2025-03-10,0.0056,2.33,Carrier type: 3A. SELF PUBLIC,Days accident to assembly: 40,,30,ALBANY,3A. SELF PUBLIC,48,60,28,-9,40,0
+7138115,2025-03-10,0.1244,74.33,Days accident to assembly: missing,Industry: 56,Cause of injury: code 60,12,KINGS,2A. SIF,61,60,49,56,,0
+6602316,2025-03-12,0.0211,15.0,Carrier type: 1A. PRIVATE,Cause of injury: code 33,,14,WESTCHESTER,1A. PRIVATE,49,33,04,38,371,0
+7429590,2025-03-12,0.0662,46.67,Carrier type: 1A. PRIVATE,Industry: 61,Days accident to assembly: 17,60,QUEENS,1A. PRIVATE,61,29,40,55,17,0
+7271136,2025-03-11,0.07,49.0,Carrier type: 1A. PRIVATE,Days accident to assembly: 28,Cause of injury: code 81,60,SUFFOLK,1A. PRIVATE,56,81,40,33,28,0
+6754407,2025-03-12,0.1517,82.67,Industry: 49,Carrier type: 1A. PRIVATE,Days accident to assembly: missing,18,NASSAU,1A. PRIVATE,42,74,52,-9,,0
+7225648,2025-03-12,0.098,63.67,Carrier type: 1A. PRIVATE,Industry: 23,Days accident to assembly: 55,68,WESTCHESTER,1A. PRIVATE,71,56,49,53,55,0
+7111249,2025-03-11,0.0321,24.0,Industry: 44,Carrier type: 4A. SELF PRIVATE,,31,NASSAU,4A. SELF PRIVATE,62,26,10,37,48,0
+6514816,2025-03-10,0.0711,49.67,Days accident to assembly: 60,Carrier type: 2A. SIF,Cause of injury: code 56,55,ERIE,2A. SIF,71,56,01,33,60,0
+6939297,2025-03-10,0.0985,64.33,Cause of injury: code 74,Industry: 48,Carrier type: 1A. PRIVATE,46,NEW YORK,1A. PRIVATE,71,74,01,35,31,0
+7251445,2025-03-11,0.1028,67.33,Carrier type: 1A. PRIVATE,Industry: 71,Days accident to assembly: 40,45,BRONX,1A. PRIVATE,23,75,37,33,40,0
+7372894,2025-03-12,0.0162,9.33,Industry: 48,Cause of injury: code 26,,62,ALBANY,2A. SIF,71,26,49,55,,0
+6581235,2025-03-10,0.0452,32.33,Cause of injury: code 26,Industry: 45,,50,KINGS,2A. SIF,72,26,59,33,54,0
+6917528,2025-03-11,0.1001,65.33,Cause of injury: code 25,Industry: 42,Carrier type: 3A. SELF PUBLIC,49,MONROE,3A. SELF PUBLIC,48,25,07,34,,0
+7180555,2025-03-10,0.0153,8.0,Carrier type: 1A. PRIVATE,Cause of injury: code 56,,38,BRONX,1A. PRIVATE,71,56,40,55,42,0
+7469459,2025-03-12,0.0382,29.0,Cause of injury: code 33,Carrier type: 2A. SIF,,38,SUFFOLK,2A. SIF,56,33,52,54,42,0
+7190964,2025-03-12,0.1175,71.33,Cause of injury: code 81,Industry: 56,Carrier type: 2A. SIF,16,ORANGE,2A. SIF,23,81,28,56,366,1
+6567877,2025-03-10,0.0369,28.0,Days accident to assembly: 101,Industry: 42,,53,QUEENS,4A. SELF PRIVATE,45,31,90,34,101,0
+7108062,2025-03-12,0.0711,50.0,Industry: 48,Carrier type: 4A. SELF PRIVATE,Days accident to assembly: 20,56,NEW YORK,4A. SELF PRIVATE,72,32,37,14,20,0
+7209453,2025-03-11,0.2334,92.33,Cause of injury: code 25,Carrier type: 3A. SELF PUBLIC,Days accident to assembly: missing,56,NASSAU,3A. SELF PUBLIC,23,25,37,34,,0
+7180314,2025-03-12,0.1246,74.67,Carrier type: 1A. PRIVATE,Cause of injury: code 57,Days accident to assembly: missing,17,ALBANY,1A. PRIVATE,33,57,28,56,,0
+7177765,2025-03-12,0.2094,91.0,Carrier type: 1A. PRIVATE,Cause of injury: code 45,Days accident to assembly: missing,16,WESTCHESTER,1A. PRIVATE,71,45,,35,,0
+7087482,2025-03-12,0.1726,87.0,Days accident to assembly: 1,Carrier type: 1A. PRIVATE,Industry: 42,60,BRONX,1A. PRIVATE,81,97,25,-9,1,0
+7195653,2025-03-11,0.0682,48.0,Cause of injury: code 57,Days accident to assembly: 256,Carrier type: 1A. PRIVATE,19,SUFFOLK,1A. PRIVATE,49,57,01,14,256,1
+7325953,2025-03-11,0.0315,22.67,Days accident to assembly: missing,Carrier type: 2A. SIF,,60,NASSAU,2A. SIF,48,81,01,-9,,0
+7329440,2025-03-12,0.0599,42.0,Carrier type: 2A. SIF,Cause of injury: code 74,Industry: 33,32,ORANGE,2A. SIF,71,74,37,36,60,0
+6913264,2025-03-10,0.1513,82.33,Carrier type: 1A. PRIVATE,Days accident to assembly: missing,Cause of injury: code 25,18,WESTCHESTER,1A. PRIVATE,33,25,28,-9,,1
+7292363,2025-03-10,0.1251,75.0,Industry: 49,Days accident to assembly: 201,Cause of injury: code 81,29,QUEENS,1A. PRIVATE,48,81,10,-9,201,0
+6670010,2025-03-12,0.0185,11.67,Industry: 62,Carrier type: 1A. PRIVATE,,40,KINGS,1A. PRIVATE,33,60,37,90,153,0
+6913958,2025-03-12,0.1603,84.67,Industry: 61,Days accident to assembly: 140,Cause of injury: code 97,38,KINGS,2A. SIF,45,97,04,90,140,1
+6858566,2025-03-10,0.0473,34.33,Carrier type: 3A. SELF PUBLIC,Days accident to assembly: missing,,39,BRONX,3A. SELF PUBLIC,56,19,52,54,,0
+7109833,2025-03-11,0.0358,27.0,Carrier type: 2A. SIF,Days accident to assembly: 274,,26,SUFFOLK,2A. SIF,49,75,43,35,274,0
+7069661,2025-03-11,0.0665,47.0,Industry: 71,Days accident to assembly: 48,Carrier type: 1A. PRIVATE,44,NASSAU,1A. PRIVATE,56,79,25,42,48,0
+7389909,2025-03-10,0.0171,10.0,Carrier type: 1A. PRIVATE,Days accident to assembly: 127,,64,QUEENS,1A. PRIVATE,61,31,52,55,127,0
+7331467,2025-03-12,0.1746,87.33,Carrier type: 3A. SELF PUBLIC,Cause of injury: code 79,Industry: 33,31,QUEENS,3A. SELF PUBLIC,48,79,,18,25,1
+6760494,2025-03-10,0.1627,85.67,Carrier type: 2A. SIF,Days accident to assembly: 160,Cause of injury: code 33,62,KINGS,2A. SIF,81,33,25,36,160,1
+6615763,2025-03-12,0.1942,88.33,Carrier type: 2A. SIF,Industry: 33,Days accident to assembly: missing,51,SUFFOLK,2A. SIF,56,25,90,35,,0
+6843529,2025-03-12,0.2072,90.67,Days accident to assembly: 35,Carrier type: 1A. PRIVATE,Industry: 42,36,KINGS,1A. PRIVATE,33,19,59,36,35,0
+6542517,2025-03-11,0.0228,16.67,Carrier type: 2A. SIF,Days accident to assembly: missing,,70,ERIE,2A. SIF,44,60,59,18,,0
+7257230,2025-03-10,0.0642,45.0,Industry: 44,Carrier type: 3A. SELF PUBLIC,Cause of injury: code 97,35,QUEENS,3A. SELF PUBLIC,72,97,90,56,173,0
+6926717,2025-03-11,0.1147,70.0,Cause of injury: code 19,Carrier type: 1A. PRIVATE,Days accident to assembly: missing,64,QUEENS,1A. PRIVATE,49,19,37,42,,0
+7457020,2025-03-11,0.0586,41.0,Industry: 61,Cause of injury: code 81,Carrier type: 3A. SELF PUBLIC,50,NASSAU,3A. SELF PUBLIC,81,81,37,-9,57,0
+6547794,2025-03-11,0.0555,39.33,Cause of injury: code 19,Industry: 72,Carrier type: 1A. PRIVATE,12,WESTCHESTER,1A. PRIVATE,42,19,,53,,0
+7449795,2025-03-12,0.0809,55.67,Cause of injury: code 25,Days accident to assembly: missing,Industry: 44,34,ERIE,2A. SIF,92,25,10,18,,0
+7313653,2025-03-11,0.0256,19.67,Days accident to assembly: 29,Cause of injury: code 19,,43,ORANGE,3A. SELF PUBLIC,23,19,59,56,29,0
+7043606,2025-03-11,0.1426,81.0,Cause of injury: code 97,Days accident to assembly: 9,Industry: 23,60,MONROE,2A. SIF,92,97,52,53,9,1
+6917960,2025-03-11,0.0974,63.33,Carrier type: 1A. PRIVATE,Days accident to assembly: missing,Industry: 81,68,WESTCHESTER,1A. PRIVATE,62,57,25,54,,0
+7079523,2025-03-12,0.2773,95.67,Cause of injury: code 57,Carrier type: 1A. PRIVATE,Industry: 48,59,MONROE,1A. PRIVATE,33,57,28,42,,0
+6513954,2025-03-10,0.0839,58.0,Days accident to assembly: 28,Carrier type: 1A. PRIVATE,Cause of injury: code 81,16,ERIE,1A. PRIVATE,23,81,37,37,28,0
+7296406,2025-03-12,0.0356,26.67,Days accident to assembly: 16,Industry: 45,,68,SUFFOLK,1A. PRIVATE,61,33,49,14,16,0
+6512455,2025-03-11,0.1078,68.67,Carrier type: 1A. PRIVATE,Cause of injury: code 19,Days accident to assembly: missing,34,KINGS,1A. PRIVATE,49,19,40,35,,0
+7304435,2025-03-10,0.0577,40.0,Carrier type: 1A. PRIVATE,Days accident to assembly: missing,Cause of injury: code 26,19,MONROE,1A. PRIVATE,44,26,59,53,,0
+6950171,2025-03-12,0.0498,35.33,Cause of injury: code 56,Industry: 23,,17,KINGS,4A. SELF PRIVATE,56,56,59,54,,0
+7226578,2025-03-11,0.0153,8.33,Days accident to assembly: missing,Carrier type: 1A. PRIVATE,,66,WESTCHESTER,1A. PRIVATE,23,31,40,54,,0
+6719455,2025-03-12,0.0237,18.0,Carrier type: 3A. SELF PUBLIC,Cause of injury: code 19,,34,BRONX,3A. SELF PUBLIC,33,19,52,90,30,0
+6942182,2025-03-10,0.053,37.67,Industry: 61,Cause of injury: code 31,Carrier type: 4A. SELF PRIVATE,14,ALBANY,4A. SELF PRIVATE,92,31,25,34,262,0
+7469740,2025-03-11,0.2969,97.33,Days accident to assembly: 311,Carrier type: 3A. SELF PUBLIC,Industry: 72,51,NASSAU,3A. SELF PUBLIC,49,33,04,18,311,1
+6507583,2025-03-11,0.077,53.0,Industry: 72,Days accident to assembly: 23,Carrier type: 2A. SIF,68,ALBANY,2A. SIF,45,97,28,56,23,0
+7451281,2025-03-12,0.0645,45.33,Days accident to assembly: 59,Cause of injury: code 26,Carrier type: 1A. PRIVATE,30,ORANGE,1A. PRIVATE,56,26,28,37,59,0
+7434401,2025-03-12,0.0455,32.67,Industry: 81,Carrier type: 1A. PRIVATE,,27,WESTCHESTER,1A. PRIVATE,56,32,10,53,391,0
+7106084,2025-03-10,0.0781,53.67,Carrier type: 1A. PRIVATE,Cause of injury: code 26,Industry: 71,22,BRONX,1A. PRIVATE,49,26,40,37,94,0
+7237645,2025-03-12,0.0106,5.33,Cause of injury: code 19,Industry: 33,,42,WESTCHESTER,2A. SIF,48,19,49,34,105,1
+6515945,2025-03-11,0.101,65.67,Cause of injury: code 81,Carrier type: 1A. PRIVATE,Industry: 92,28,BRONX,1A. PRIVATE,92,81,52,36,,0
+7182918,2025-03-11,0.0351,25.67,Carrier type: 1A. PRIVATE,Days accident to assembly: 35,,16,SUFFOLK,1A. PRIVATE,23,79,07,90,35,0
+6715187,2025-03-10,0.0758,52.0,Cause of injury: code 81,Carrier type: 3A. SELF PUBLIC,Industry: 62,43,NASSAU,3A. SELF PUBLIC,48,81,25,54,43,0
+7178563,2025-03-10,0.1581,84.0,Industry: 92,Cause of injury: code 45,Days accident to assembly: missing,48,ALBANY,1A. PRIVATE,49,45,,38,,0
+7252139,2025-03-10,0.1592,84.33,Cause of injury: code 99,Carrier type: 1A. PRIVATE,Days accident to assembly: 33,42,MONROE,1A. PRIVATE,62,99,37,14,33,0
+6701749,2025-03-12,0.0251,18.67,Industry: 33,Carrier type: 3A. SELF PUBLIC,,65,WESTCHESTER,3A. SELF PUBLIC,44,97,59,14,380,0
+7145977,2025-03-10,0.01,5.0,Days accident to assembly: missing,Industry: 62,,52,ERIE,4A. SELF PRIVATE,23,19,90,35,,0
+6610373,2025-03-12,0.283,96.67,Carrier type: 1A. PRIVATE,Industry: 61,Cause of injury: code 45,14,KINGS,1A. PRIVATE,81,45,43,55,,0
+7365138,2025-03-10,0.0291,22.0,Cause of injury: code 29,Days accident to assembly: 15,,60,ALBANY,3A. SELF PUBLIC,33,29,59,56,15,0
+7064588,2025-03-11,0.0281,21.33,Days accident to assembly: missing,Cause of injury: code 45,,56,BRONX,1A. PRIVATE,45,45,52,-9,,0
+6928862,2025-03-10,0.155,83.33,Days accident to assembly: 104,Industry: 62,Carrier type: 3A. SELF PUBLIC,55,NEW YORK,3A. SELF PUBLIC,61,60,01,38,104,1
+7490587,2025-03-10,0.1025,67.0,Cause of injury: code 99,Industry: 61,Carrier type: 1A. PRIVATE,22,NEW YORK,1A. PRIVATE,44,99,28,35,5,0
+7231958,2025-03-11,0.12,73.0,Days accident to assembly: 45,Cause of injury: code 57,Carrier type: 2A. SIF,31,KINGS,2A. SIF,81,57,49,18,45,0
+7029352,2025-03-11,0.0578,40.33,Carrier type: 3A. SELF PUBLIC,Days accident to assembly: 207,Industry: 33,25,NASSAU,3A. SELF PUBLIC,49,99,,33,207,0
+6500847,2025-03-11,0.0252,19.0,Cause of injury: code 81,Industry: 48,,48,BRONX,1A. PRIVATE,62,81,01,42,174,0
+7183910,2025-03-12,0.1372,79.33,Industry: 92,Days accident to assembly: 73,Cause of injury: code 32,17,ORANGE,1A. PRIVATE,71,32,40,-9,73,1
+6868626,2025-03-12,0.1296,77.33,Cause of injury: code 32,Industry: 61,Carrier type: 3A. SELF PUBLIC,68,ORANGE,3A. SELF PUBLIC,23,32,59,56,138,0
+6589225,2025-03-10,0.1876,88.0,Cause of injury: code 60,Industry: 71,Days accident to assembly: missing,13,QUEENS,2A. SIF,61,60,37,35,,0
+6985783,2025-03-10,0.0202,14.0,Carrier type: 2A. SIF,Industry: 81,,13,KINGS,2A. SIF,48,56,01,37,204,0
+6604275,2025-03-10,0.0836,57.33,Cause of injury: code 75,Carrier type: 1A. PRIVATE,Days accident to assembly: 320,16,BRONX,1A. PRIVATE,56,75,01,36,320,0
+6779560,2025-03-11,0.0629,44.33,Cause of injury: code 19,Industry: 72,Carrier type: 4A. SELF PRIVATE,52,SUFFOLK,4A. SELF PRIVATE,49,19,01,53,9,0
+6708532,2025-03-12,0.3194,98.0,Industry: 56,Carrier type: 3A. SELF PUBLIC,Cause of injury: code 25,26,KINGS,3A. SELF PUBLIC,49,25,28,35,10,1
+6597130,2025-03-11,0.0448,31.67,Industry: 42,Days accident to assembly: 12,,24,BRONX,1A. PRIVATE,56,45,07,14,12,0
+6655766,2025-03-10,0.0261,20.33,Days accident to assembly: missing,Cause of injury: code 29,,52,BRONX,2A. SIF,72,29,01,35,,0
+7258832,2025-03-12,0.0315,23.0,Days accident to assembly: 380,Industry: 61,,47,WESTCHESTER,2A. SIF,92,57,04,34,380,0
+6807383,2025-03-10,0.044,31.33,Industry: 81,Carrier type: 1A. PRIVATE,,52,MONROE,1A. PRIVATE,81,81,,56,,0
+6870340,2025-03-11,0.0844,58.33,Cause of injury: code 99,Industry: 61,Days accident to assembly: 96,48,ALBANY,2A. SIF,33,99,04,-9,96,0
+6748409,2025-03-11,0.0705,49.33,Days accident to assembly: 89,Cause of injury: code 26,Industry: 48,57,QUEENS,1A. PRIVATE,44,26,52,55,89,0
+6708707,2025-03-12,0.2975,97.67,Cause of injury: code 31,Industry: 45,Carrier type: 3A. SELF PUBLIC,67,ALBANY,3A. SELF PUBLIC,62,31,07,35,0,0
+6936641,2025-03-12,0.1395,80.0,Industry: 71,Days accident to assembly: missing,Cause of injury: code 81,12,ALBANY,1A. PRIVATE,44,81,40,36,,0
+7348898,2025-03-10,0.1352,79.0,Industry: 44,Days accident to assembly: 200,Carrier type: 2A. SIF,63,ALBANY,2A. SIF,44,57,,33,200,0
+6957171,2025-03-12,0.0505,36.67,Cause of injury: code 29,Carrier type: 2A. SIF,Industry: 33,16,ORANGE,2A. SIF,48,29,01,55,124,0
+7233411,2025-03-12,0.2173,91.33,Days accident to assembly: missing,Industry: 71,Cause of injury: code 75,45,SUFFOLK,1A. PRIVATE,92,75,07,35,,1
+7454554,2025-03-10,0.0199,13.67,Industry: 48,Cause of injury: code 45,,32,ORANGE,3A. SELF PUBLIC,56,45,,54,179,0
+6689269,2025-03-11,0.0211,14.67,Cause of injury: code 97,Industry: 23,,68,NASSAU,3A. SELF PUBLIC,56,97,04,53,289,0
+7092893,2025-03-10,0.0096,4.33,Days accident to assembly: missing,Carrier type: 4A. SELF PRIVATE,,25,QUEENS,4A. SELF PRIVATE,23,32,90,42,,0
+7064657,2025-03-11,0.1443,81.33,Carrier type: 1A. PRIVATE,Cause of injury: code 74,Industry: 45,51,ERIE,1A. PRIVATE,56,74,07,34,,0
+7459212,2025-03-12,0.1264,75.67,Days accident to assembly: missing,Cause of injury: code 60,Industry: 23,64,SUFFOLK,1A. PRIVATE,62,60,59,53,,0
+7143955,2025-03-10,0.0113,5.67,Industry: 23,Days accident to assembly: missing,,58,SUFFOLK,2A. SIF,44,31,49,90,,0
+7344292,2025-03-11,0.1701,86.33,Days accident to assembly: 118,Cause of injury: code 32,Industry: 44,44,BRONX,1A. PRIVATE,44,32,10,37,118,1
+7363041,2025-03-11,0.4155,99.67,Carrier type: 1A. PRIVATE,Days accident to assembly: missing,Cause of injury: code 79,26,WESTCHESTER,1A. PRIVATE,92,79,37,35,,1
+7376127,2025-03-12,0.06,42.33,Industry: 23,Cause of injury: code 74,Carrier type: 2A. SIF,47,ALBANY,2A. SIF,44,74,37,36,43,0
+7047075,2025-03-10,0.0981,64.0,Industry: 42,Days accident to assembly: missing,Cause of injury: code 25,21,WESTCHESTER,1A. PRIVATE,33,25,90,37,,0
+6778419,2025-03-12,0.0899,60.0,Carrier type: 1A. PRIVATE,Cause of injury: code 56,Industry: 48,27,SUFFOLK,1A. PRIVATE,56,56,10,14,,0
+7024614,2025-03-12,0.0304,22.33,Cause of injury: code 97,Days accident to assembly: 9,,63,MONROE,2A. SIF,62,97,07,14,9,0
+6804882,2025-03-12,0.2233,92.0,Industry: 92,Carrier type: 3A. SELF PUBLIC,Days accident to assembly: 19,43,NEW YORK,3A. SELF PUBLIC,62,79,25,14,19,0
+6801926,2025-03-12,0.0161,9.0,Industry: 72,Days accident to assembly: 23,,64,WESTCHESTER,1A. PRIVATE,61,74,04,55,23,1
+6615879,2025-03-11,0.0737,50.33,Cause of injury: code 81,Carrier type: 1A. PRIVATE,Industry: 49,53,BRONX,1A. PRIVATE,81,81,43,54,20,0
+6879335,2025-03-11,0.0344,24.67,Industry: 49,Days accident to assembly: missing,,65,ERIE,1A. PRIVATE,92,25,28,42,,0
+7399369,2025-03-11,0.0127,7.67,Carrier type: 3A. SELF PUBLIC,Industry: 44,,58,NEW YORK,3A. SELF PUBLIC,56,31,01,56,,0
+6878908,2025-03-11,0.0258,20.0,Carrier type: 1A. PRIVATE,Cause of injury: code 75,,45,MONROE,1A. PRIVATE,48,75,49,38,,1
+7443813,2025-03-12,0.1418,80.67,Days accident to assembly: 27,Carrier type: 3A. SELF PUBLIC,Cause of injury: code 57,59,NASSAU,3A. SELF PUBLIC,72,57,04,37,27,0
+7118435,2025-03-11,0.1058,68.33,Days accident to assembly: 74,Cause of injury: code 56,Industry: 42,49,WESTCHESTER,2A. SIF,42,56,37,53,74,0
+7489534,2025-03-12,0.0792,54.0,Cause of injury: code 26,Days accident to assembly: missing,Carrier type: 1A. PRIVATE,39,MONROE,1A. PRIVATE,62,26,40,34,,0
+6757918,2025-03-12,0.1304,77.67,Industry: 56,Days accident to assembly: missing,Cause of injury: code 60,22,ORANGE,1A. PRIVATE,56,60,52,34,,1
+6920863,2025-03-11,0.4149,99.33,Days accident to assembly: missing,Carrier type: 3A. SELF PUBLIC,Cause of injury: code 99,50,ORANGE,3A. SELF PUBLIC,92,99,25,14,,1
+6854631,2025-03-10,0.1192,72.67,Carrier type: 1A. PRIVATE,Days accident to assembly: 211,Industry: 23,60,QUEENS,1A. PRIVATE,45,74,59,18,211,0
+7172702,2025-03-10,0.2049,89.67,Industry: 42,Carrier type: 3A. SELF PUBLIC,Days accident to assembly: missing,19,WESTCHESTER,3A. SELF PUBLIC,23,57,43,38,,0
+7089015,2025-03-10,0.1622,85.33,Industry: 62,Cause of injury: code 56,Days accident to assembly: 97,13,SUFFOLK,2A. SIF,45,56,43,18,97,0
+7121065,2025-03-11,0.1724,86.67,Carrier type: 2A. SIF,Cause of injury: code 19,Days accident to assembly: 29,46,ERIE,2A. SIF,44,19,07,33,29,0
+7167228,2025-03-10,0.0475,35.0,Cause of injury: code 19,Industry: 42,,66,NEW YORK,1A. PRIVATE,49,19,,34,57,0
+6557030,2025-03-10,0.0972,63.0,Carrier type: 1A. PRIVATE,Days accident to assembly: missing,Industry: 81,65,KINGS,1A. PRIVATE,62,57,10,33,,0
+7337654,2025-03-11,0.0666,47.33,Cause of injury: code 57,Carrier type: 2A. SIF,Days accident to assembly: missing,14,KINGS,2A. SIF,49,57,40,53,,0
+6665185,2025-03-10,0.0624,44.0,Days accident to assembly: missing,Industry: 48,Cause of injury: code 75,29,WESTCHESTER,2A. SIF,62,75,59,35,,0
