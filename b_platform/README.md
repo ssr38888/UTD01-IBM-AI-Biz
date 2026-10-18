@@ -22,6 +22,6 @@ Granite (the letter writer, `c_product/granite.py`):
 
 Model (2025 held-out year, 10% outreach budget): MLP recall 49.9% vs logistic baseline 43.6% vs private-carrier rule 9.7%. Validation picked the epoch; test was read once. Months 11–12 never appear in training (late-year rows are purged), so they encode as "unseen".
 
-## Claim risk model (`b_platform/claim_risk.py`, ~1.5 min on CPU)
+## Claim risk model (`b_platform/claim_risk.py`, ~2 min on CPU)
 
-Gradient-boosted trees on the 8 claim fields plus peer baselines (2023 dispute rate of the claim's industry, carrier, county, injury, body part, cause). 2025 test year, 10% budget: recall 50.0% (95% CI 49.3–50.8%), AUC 0.835, worst decile calibration gap 1.3 points; logistic baseline 43.6%. A "scenario" variant adds SIMULATED claimant history and fall-video intensity (assumptions in the script and `artifacts/claim_risk_metrics.json`); its higher numbers come from those assumptions and are not a result. Writes `artifacts/claim_risk.csv`, which the dashboard shows under Analytics.
+Gradient-boosted trees on the 8 claim fields plus peer baselines (dispute rate of the claim's industry, carrier, county, injury, body part, cause), blended 75/25 with the stream-B MLP. Settings and blend weight chosen on 2024 validation, final model refit on 2023+2024, 2025 test scored once. Test, 10% budget: recall 51.0% (95% CI 50.4–51.8%), AUC 0.844; logistic baseline 43.6%. A "scenario" variant adds SIMULATED claimant history and fall-video intensity (assumptions in the script and `artifacts/claim_risk_metrics.json`); its higher numbers come from those assumptions and are not a result. Writes `artifacts/claim_risk.csv`, which the dashboard shows under Analytics.

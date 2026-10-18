@@ -1,6 +1,6 @@
 """Claim risk model: claim + industry baselines + claimant history + fall-video evidence.
 
-python b_platform/claim_risk.py      (~1-2 min on a laptop CPU)
+python b_platform/claim_risk.py      (~2 min on a laptop CPU)
 
 Two models, same real labels (recorded dispute within 90 days), same 2023/2024/2025 time split:
   real      - the 8 public claim fields + peer baselines (train-year dispute rate of the claim's
@@ -52,7 +52,7 @@ def load(split):
 
 
 def peer_rates(train):
-    """Smoothed train-year dispute rate per category (shrunk toward the overall rate below ~200 claims)."""
+    """Smoothed dispute rate in the fitting years per category (shrunk toward the overall rate below ~200 claims)."""
     prior, k = train["disputed_within_90d"].mean(), 200
     rates = {}
     for col in PEERS:
@@ -97,12 +97,26 @@ def align(X, cats):
     return X
 
 
-def fit(X, y, seed, sample=None):
-    model = HistGradientBoostingClassifier(learning_rate=.08, max_iter=300, max_leaf_nodes=31, min_samples_leaf=100,
-                                           l2_regularization=1.0, categorical_features="from_dtype",
-                                           early_stopping=True, validation_fraction=.1, random_state=seed)
+GRID = [  # small search, chosen on 2024 validation recall@10%
+    {"learning_rate": .08, "max_leaf_nodes": 31, "min_samples_leaf": 100},
+    {"learning_rate": .05, "max_leaf_nodes": 63, "min_samples_leaf": 200},
+    {"learning_rate": .05, "max_leaf_nodes": 15, "min_samples_leaf": 50},
+    {"learning_rate": .10, "max_leaf_nodes": 63, "min_samples_leaf": 400},
+]
+
+
+def fit(X, y, seed, sample=None, params=GRID[0]):
+    model = HistGradientBoostingClassifier(max_iter=400, l2_regularization=1.0, categorical_features="from_dtype",
+                                           early_stopping=True, validation_fraction=.1, random_state=seed, **params)
     idx = sample if sample is not None else slice(None)
     return model.fit(X.iloc[idx], y[idx])
+
+
+def mlp_scores(frame):
+    """The stream-B MLP (trained on 2023 only) as a second opinion for blending."""
+    from b_platform.model import encode, load_model, predict
+    model, _ = load_model("cpu")
+    return predict(model, encode(frame.assign(assembly_month=frame["assembly_month"].astype(str)), json.loads((OUT / "features.json").read_text())), "cpu")
 
 
 def bootstrap(y, scores, n=200):
@@ -128,37 +142,68 @@ def calibration(y, p, bins=10):
             "brier": float(brier_score_loss(y, p))}
 
 
+def recall10(y, p):
+    return evaluate(y, p)["recall_at_10pct"]
+
+
 def main():
     OUT.mkdir(parents=True, exist_ok=True)
     train, val, test = (load(s) for s in ["train", "validation", "test"])
-    rates, prior = peer_rates(train)
     y = {s: f["disputed_within_90d"].to_numpy() for s, f in [("train", train), ("validation", val), ("test", test)]}
-    report = {"target": "recorded dispute 1-90 days after assembly", "split": "train 2023 / validation 2024 / test 2025",
-              "simulated_feature_assumptions": ASSUMPTIONS, "models": {}}
+    report = {"target": "recorded dispute 1-90 days after assembly",
+              "protocol": "settings and blend weight chosen on 2024 validation (fit on 2023); final model refit on 2023+2024; "
+                          "2025 test scored once",
+              "simulated_feature_assumptions": ASSUMPTIONS, "models": {}, "selection": {}}
     baseline = json.loads((ROOT / "data/modeling/baseline_results/metrics.json").read_text())["metrics"]
     report["models"]["logistic_baseline (teammate)"] = {s: {k: baseline[s]["logistic_regression"][k] for k in ("recall_at_10pct", "roc_auc")}
                                                        for s in ("validation", "test")}
+
+    # 1. Select tree settings and MLP blend weight on validation, real features only.
+    rates, prior = peer_rates(train)
+    Xtr = features(train, rates, prior, False)
+    cats = {c: Xtr[c].cat.categories for c in CODES}
+    Xva = align(features(val, rates, prior, False), cats)
+    tried = []
+    for params in GRID:
+        p = fit(Xtr, y["train"], SEED, params=params).predict_proba(Xva)[:, 1]
+        tried.append((recall10(y["validation"], p), params, p))
+        print("validation", params, round(tried[-1][0], 4))
+    best_recall, best, p_val = max(tried, key=lambda t: t[0])
+    mlp_val = mlp_scores(val)
+    blends = {w: recall10(y["validation"], (1 - w) * p_val + w * mlp_val) for w in (0, .25, .5, .75)}
+    weight = max(blends, key=blends.get)
+    report["selection"] = {"grid": [{**t[1], "val_recall_at_10pct": t[0]} for t in tried], "chosen": best,
+                           "mlp_blend_val_recall": blends, "mlp_weight": weight}
+    print("blend weights on validation", blends, "-> mlp weight", weight)
+
+    # 2. Refit on 2023+2024 and score 2025 once.
+    trval = pd.concat([train, val], ignore_index=True)
+    y_trval = np.concatenate([y["train"], y["validation"]])
+    rates, prior = peer_rates(trval)
+    mlp_test = mlp_scores(test)
     bag = {}
     for name, scenario in [("real", False), ("scenario", True)]:
-        Xtr = features(train, rates, prior, scenario)
-        cats = {c: Xtr[c].cat.categories for c in CODES}
-        Xva, Xte = (align(features(f, rates, prior, scenario), cats) for f in (val, test))
-        model = fit(Xtr, y["train"], SEED)
-        p_val, p_test = model.predict_proba(Xva)[:, 1], model.predict_proba(Xte)[:, 1]
+        Xfit = features(trval, rates, prior, scenario)
+        cats = {c: Xfit[c].cat.categories for c in CODES}
+        Xte = align(features(test, rates, prior, scenario), cats)
+        model = fit(Xfit, y_trval, SEED, params=best)
+        p_test = model.predict_proba(Xte)[:, 1]
+        if name == "real":  # the MLP never saw simulated columns, so only the real model is blended
+            report["models"]["real_trees_only"] = {"test": {"recall_at_10pct": recall10(y["test"], p_test),
+                                                            **bootstrap(y["test"], p_test)}}
+            p_test = (1 - weight) * p_test + weight * mlp_test
         report["models"][name] = {
-            "validation": {k: evaluate(y["validation"], p_val)[k] for k in ("recall_at_10pct", "precision_at_10pct", "roc_auc")},
             "test": {**{k: evaluate(y["test"], p_test)[k] for k in ("recall_at_10pct", "precision_at_10pct", "lift_over_random", "roc_auc")},
                      **bootstrap(y["test"], p_test), "calibration": calibration(y["test"], p_test)},
-            "features": list(Xtr.columns), "iterations": int(model.n_iter_),
+            "features": list(Xfit.columns), "iterations": int(model.n_iter_),
         }
-        print(name, json.dumps(report["models"][name]["test"] | {"calibration": None}, indent=1))
-        bag[name] = (model, Xte, p_test)
+        print(name, json.dumps(report["models"][name]["test"] | {"calibration": None}))
+        bag[name] = (Xfit, Xte, p_test)
 
-    # Per-claim range: main model + 5 models on bootstrap resamples of train (scenario model, which the dashboard shows).
-    model, Xte, p_test = bag["scenario"]
-    Xtr = features(train, rates, prior, True)
+    # Per-claim range: main model + 5 models on bootstrap resamples (scenario model, which the dashboard shows).
+    Xfit, Xte, p_test = bag["scenario"]
     rng = np.random.default_rng(SEED)
-    members = np.stack([fit(Xtr, y["train"], SEED + i, rng.integers(0, len(Xtr), len(Xtr))).predict_proba(Xte)[:, 1]
+    members = np.stack([fit(Xfit, y_trval, SEED + i, rng.integers(0, len(Xfit), len(Xfit)), best).predict_proba(Xte)[:, 1]
                         for i in range(5)] + [p_test])  # main model included so the range always contains its score
     sim = Xte[["prior_claims_5y", "prior_disputes_5y", "fall_video", "fall_intensity", "descent_ms"]]
     out = pd.DataFrame({
@@ -174,9 +219,9 @@ def main():
     width = out["risk_high"] - out["risk_low"]
     report["per_claim_range"] = {"members": 6, "median_width": float(width.median()), "p90_width": float(width.quantile(.9))}
     (OUT / "claim_risk_metrics.json").write_text(json.dumps(report, indent=1))
-    print(json.dumps(report["per_claim_range"]), f"\nwrote {OUT / 'claim_risk.csv'}")
+    print(json.dumps(report["per_claim_range"]), f"wrote {OUT / 'claim_risk.csv'}")
 
-    # Self-checks: real labels untouched, simulated columns present only in the scenario model.
+    # Self-checks: simulated columns only in the scenario model; ranges contain the shown score.
     assert "prior_disputes_5y" not in report["models"]["real"]["features"]
     assert ((out.risk_low <= out.risk) & (out.risk <= out.risk_high)).all() and out["claim_id"].is_unique
 

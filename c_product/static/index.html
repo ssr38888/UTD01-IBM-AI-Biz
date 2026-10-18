@@ -285,11 +285,11 @@ function analyticsHtml(a, w, c) {
       ${a.peer_industry ? ` · <b>${(a.risk / a.peer_industry).toFixed(1)}×</b> industry average` : ""}</div>
     <div class="rng" role="img" aria-label="Risk ${pct(a.risk)}, range ${pct(a.risk_low)} to ${pct(a.risk_high)}">
       <i style="left:${a.risk_low/hiMax*100}%;width:${(a.risk_high-a.risk_low)/hiMax*100}%"></i><b style="left:${a.risk/hiMax*100}%"></b></div>
-    <div class="peers" role="table" aria-label="2023 dispute rate of claims sharing each attribute; red line is the overall rate ${pct(a.overall_rate)}">
+    <div class="peers" role="table" aria-label="2023–24 dispute rate of claims sharing each attribute; red line is the overall rate ${pct(a.overall_rate)}">
       ${peers.map(([k, word, v]) => `<span class="lbl" role="cell" title="${esc(k)}: ${esc(word)}">${esc(k)} · ${esc(word)}</span>
         <span class="pb" role="cell" aria-hidden="true"><i style="width:${x(v)}%"></i><b style="left:${x(a.overall_rate)}%"></b></span>
         <span role="cell">${pct(v)}</span>`).join("")}
-      <span class="muted" style="grid-column:1/-1">Peer rates = 2023 dispute rate of claims sharing that attribute · overall ${pct(a.overall_rate)} (red line)</span></div>
+      <span class="muted" style="grid-column:1/-1">Peer rates = 2023–24 dispute rate of claims sharing that attribute · overall ${pct(a.overall_rate)} (red line)</span></div>
     <h3>Claimant history ${sim}</h3>
     <dl><dt>Prior claims (5y)</dt><dd>${a.prior_claims_5y}</dd><dt>Prior disputes (5y)</dt><dd>${a.prior_disputes_5y}</dd></dl>
     <h3>Fall video evidence ${sim}</h3>
