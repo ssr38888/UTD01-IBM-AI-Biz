@@ -18,6 +18,8 @@ A dispute-risk model whose error on the held-out 2025 year is as low as the publ
 
 - [Are the extra public fields known when a claim is assembled?](01-research-day0-fields.md): snapshot data; drop accident/occupational-disease rulings, use C-2/C-3 only if dated on or before assembly
 - [Pull the extra day-0 fields for 2023–2025](02-task-fetch-public-fields.md): 810,613 claims joined by claim id
+- [Should gender, age and ZIP feed the score, or only the fairness audit?](03-grilling-protected-attributes.md): fairness audit only; costs 0.1 point
+- [Which error do we minimize?](04-grilling-which-error.md): recall@10% on validation picks; AUC and calibration reported
 - [Tune, blend and refit with the decided features](05-task-tune-and-blend.md): 2025 recall@10% 58.4% (95% CI 57.8–59.3), up from 51.0%; MLP blend dropped
 
 ## Not yet specified

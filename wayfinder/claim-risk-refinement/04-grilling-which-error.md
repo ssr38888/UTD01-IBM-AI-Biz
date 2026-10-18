@@ -7,4 +7,6 @@ Label: `wayfinder:grilling` · type HITL
 
 Recommendation the run proceeds on: pick by recall@10% on 2024 validation (it is what the advocate's daily list lives on); report AUC and the calibration gap as secondary; report 95% bootstrap intervals for each.
 
-## Status: open (HITL), running on the recommendation
+## Resolution (closed, Jack 18 Oct 13:11 UTC: "go with your recs")
+
+Recommendation adopted as stated above.
