@@ -1,0 +1,14 @@
+.sitebar { position: sticky; top: 0; z-index: 20; display: flex; align-items: center; gap: 12px; min-height: 64px; padding: 10px 16px; background: var(--bg, #0f1115); border-bottom: 1px solid var(--line, #2a2f3a); }
+.sitebar .brand { font-size: 17px; font-weight: 750; letter-spacing: -.5px; }
+.sitebar .page-name { color: var(--muted, #9aa3b2); font-size: 13px; border-left: 1px solid var(--line, #2a2f3a); padding-left: 12px; }
+.navigation { position: relative; }
+.menu-toggle { display: grid; place-content: center; gap: 4px; width: 40px; height: 40px; padding: 10px; background: transparent; color: inherit; border: 1px solid var(--line, #2a2f3a); border-radius: 10px; cursor: pointer; }
+.menu-toggle span { display: block; width: 17px; height: 2px; background: currentColor; border-radius: 2px; }
+.app-menu { position: absolute; top: 48px; left: 0; width: 210px; padding: 6px; background: var(--panel, #171a21); border: 1px solid var(--line, #2a2f3a); border-radius: 12px; box-shadow: 0 12px 36px #0007; }
+.app-menu a, .app-menu button { display: block; width: 100%; text-align: left; text-decoration: none; border: 0; border-radius: 7px; background: transparent; color: inherit; font: inherit; padding: 12px; cursor: pointer; }
+.app-menu a:hover, .app-menu button:hover, .app-menu [aria-current] { background: #ffffff0d; color: var(--accent, #4f8cff); }
+#logsView { width: 100%; }
+.behind-logs { position: fixed; inset: 64px 0 0; pointer-events: none; }
+#logsView { position: relative; z-index: 1; background: var(--bg); }
+#logsFrame { display: block; width: 100%; height: calc(100dvh - 70px); border: 0; background: var(--bg); }
+button:focus-visible, a:focus-visible { outline: 2px solid var(--accent, #4f8cff); outline-offset: 3px; }

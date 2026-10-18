@@ -1,0 +1,70 @@
+<!doctype html>
+<html lang="en">
+<head>
+  <meta charset="utf-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1, viewport-fit=cover">
+  <meta name="theme-color" content="#0f1115">
+  <title>FallWatch Capture</title>
+  <link rel="stylesheet" href="style.css?v=8">
+  <link rel="stylesheet" href="navigation.css?v=8">
+</head>
+<body>
+  <header class="sitebar">
+    <div class="navigation">
+      <button id="menuToggle" class="menu-toggle" aria-label="Open navigation" aria-expanded="false" aria-controls="appMenu"><span></span><span></span><span></span></button>
+      <nav id="appMenu" class="app-menu" aria-label="Main navigation" hidden>
+        <button data-view="camera" aria-current="page">Camera</button>
+        <button data-view="logs">Logs</button>
+      </nav>
+    </div>
+    <span class="brand">FallWatch</span><span id="pageName" class="page-name">Camera</span>
+  </header>
+  <main id="cameraView">
+  <!-- Setup screen -->
+  <section id="setup" class="panel">
+    <h1>FallWatch <span class="sub">camera</span></h1>
+    <p class="lede">Position the camera so the whole person and floor are visible. Once started, monitoring detects falls and saves event evidence automatically.</p>
+
+    <label>Device name
+      <input id="deviceId" autocomplete="off" placeholder="e.g. warehouse-bay-3">
+    </label>
+    <label>Camera
+      <select id="cameraFacing">
+        <option value="environment">Back camera</option>
+        <option value="user">Front camera</option>
+        <option value="file">Video file (testing)</option>
+      </select>
+    </label>
+    <input id="videoFile" type="file" accept="video/*" hidden>
+
+    <label class="check">
+      <input id="consent" type="checkbox">
+      <span>Everyone in view has been told this camera is active and agreed to fall monitoring.</span>
+    </label>
+
+    <button id="startBtn" class="primary" disabled>Start watching</button>
+    <p id="setupMsg" class="msg" role="status"></p>
+  </section>
+
+  <!-- Live screen -->
+  <section id="live" hidden>
+    <div class="stage">
+      <video id="video" playsinline muted></video>
+      <canvas id="overlay"></canvas>
+      <div class="rec"><span class="dot"></span>Monitoring</div>
+      <div id="banner" class="banner watching">Watching</div>
+    </div>
+
+    <div class="monitor-bar">
+      <div><span class="status-dot"></span> Live camera <span id="sPosture" class="posture">Connecting…</span></div>
+      <button id="stopBtn" class="danger">Stop monitoring</button>
+    </div>
+    <p id="liveMsg" class="msg" role="status"></p>
+  </section>
+
+  </main>
+  <section id="logsView" hidden><iframe id="logsFrame" title="FallWatch event log"></iframe></section>
+  <script type="module" src="navigation.js?v=8"></script>
+  <script type="module" src="app.js?v=8"></script>
+</body>
+</html>

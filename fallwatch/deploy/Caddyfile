@@ -1,0 +1,16 @@
+# Phones only allow camera access over HTTPS.
+# SITE_ADDRESS = a domain pointing at the LinuxONE box  -> real certificate from Let's Encrypt
+#              = an IP, e.g. "https://203.0.113.10"     -> Caddy's own certificate (accept the warning once per phone)
+{$SITE_ADDRESS} {
+	encode gzip
+	request_body {
+		max_size 100MB
+	}
+	reverse_proxy api:8000
+	header {
+		Strict-Transport-Security "max-age=31536000"
+		Permissions-Policy "camera=(self)"
+		X-Content-Type-Options nosniff
+		Referrer-Policy no-referrer
+	}
+}

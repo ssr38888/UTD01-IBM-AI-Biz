@@ -1,0 +1,71 @@
+<!doctype html>
+<html lang="en">
+<head>
+  <meta charset="utf-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1, viewport-fit=cover">
+  <meta name="theme-color" content="#0f1115">
+  <title>FallWatch · Event log</title>
+  <link rel="stylesheet" href="viewer.css?v=8">
+  <link rel="stylesheet" href="/capture/navigation.css?v=8">
+</head>
+<body>
+  <header class="sitebar">
+    <div class="navigation">
+      <button id="menuToggle" class="menu-toggle" aria-label="Open navigation" aria-expanded="false" aria-controls="appMenu"><span></span><span></span><span></span></button>
+      <nav id="appMenu" class="app-menu" aria-label="Main navigation" hidden>
+        <a href="/capture/" target="_top">Camera</a>
+        <a href="/viewer/" aria-current="page">Logs</a>
+      </nav>
+    </div>
+    <span class="brand">FallWatch</span><span class="page-name">Event log</span>
+  </header>
+  <main class="log-page">
+    <div class="page-heading">
+      <div><p class="eyebrow">MONITORING / LOGS</p><h1>Event log<span class="title-dot">.</span></h1><p id="todayLabel" class="muted"></p></div>
+      <button id="refresh" class="refresh" disabled>↻ <span>Refresh</span></button>
+    </div>
+    <button id="chain" class="refresh">Verify all events</button>
+    <p id="msg" class="msg" role="status">Loading saved events, history, and evidence�</p>
+    <section class="tile history-panel" aria-labelledby="historyHeading">
+      <div class="history-toolbar"><div><p class="eyebrow">PERSISTENT RECORDS</p><h2 id="historyHeading">Event history</h2></div>
+        <div class="history-filters" role="group" aria-label="Filter event history"><button id="historyAll" aria-pressed="true">All history</button><button id="historyToday" aria-pressed="false">Today</button></div>
+      </div>
+      <p id="historyCount" class="small muted">Loading saved events�</p>
+      <div id="historyList" class="history-list" aria-label="Saved events"><p class="history-empty muted">Loading event history�</p></div>
+      <button id="loadMore" class="load-more" hidden>Load older events</button>
+    </section>
+    <h2 class="overview-heading">Today's overview</h2>
+    <div class="dashboard">
+      <section class="tile count-tile" aria-labelledby="countHeading">
+        <div class="tile-heading"><h2 id="countHeading">Events today</h2><span class="tiny-icon">↗</span></div>
+        <div><strong id="eventCount" class="event-count">—</strong><p class="muted">events captured</p></div>
+        <div class="count-footer"><span class="live-dot"></span><span id="syncStatus">Waiting for access</span></div>
+      </section>
+      <section class="tile gallery-tile" aria-labelledby="galleryHeading">
+        <div class="tile-heading gallery-heading"><div><p class="eyebrow">SAVED EVIDENCE</p><h2 id="galleryHeading">Event photos</h2></div><label class="sr-only" for="eventSelect">Select event</label><select id="eventSelect" disabled><option>No event selected</option></select></div>
+        <div id="gallery" class="gallery-empty"><div class="empty-symbol">▧</div><h3>Your event evidence appears here</h3><p class="muted">Open logs to see photos saved automatically by the camera.</p></div>
+      </section>
+      <section class="tile storage-tile" aria-labelledby="storageHeading">
+        <div class="tile-heading"><h2 id="storageHeading">Storage used</h2><span class="tiny-icon">▤</span></div>
+        <strong id="storageUsed" class="metric">—</strong>
+        <p class="muted">Today's saved photos + video clips</p>
+        <div class="divider"></div><p id="selectedStorage" class="small muted">Select an event for its storage size.</p>
+      </section>
+      <section class="tile fingerprint-tile" aria-labelledby="fingerprintHeading">
+        <div class="tile-heading"><h2 id="fingerprintHeading">Event fingerprint</h2><span class="tiny-icon">#</span></div>
+        <p class="eyebrow">DETECTED AT · LOCAL TIME</p><time id="eventTime" class="event-time">—</time>
+        <p id="receivedTime" class="small muted">Select an event to see its timestamp.</p>
+        <p class="eyebrow hash-label">MANIFEST SHA-256</p><code id="eventHash">—</code>
+        <div class="verify-row"><button id="verifyBtn" disabled>Verify evidence</button><span id="verifyOut" role="status"></span></div>
+      </section>
+      <section class="tile chart-tile" aria-labelledby="chartHeading">
+        <div class="tile-heading"><div><p class="eyebrow">DAILY ACTIVITY</p><h2 id="chartHeading">Events happened today</h2></div><span class="chart-legend"><span class="live-dot"></span>Events / hour</span></div>
+        <div id="dailyChart" class="chart" aria-live="polite"><p class="muted">Open logs to load today's activity.</p></div>
+        <p id="chartNote" class="small muted">Hours follow your device's local time.</p>
+      </section>
+    </div>
+  </main>
+  <script type="module" src="/capture/navigation.js?v=8"></script>
+  <script type="module" src="viewer.js?v=9"></script>
+</body>
+</html>

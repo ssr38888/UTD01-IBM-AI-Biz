@@ -1,0 +1,20 @@
+# Secrets: never commit
+.env
+deploy/.env
+*.pem
+*.key
+
+# Runtime data (evidence pictures, database)
+data/
+*.db
+
+# Python / tools
+__pycache__/
+.pytest_cache/
+*.pyc
+node_modules/
+phone/vendor/
+
+# Local preview runtime and tools
+.venv/
+.tools/
