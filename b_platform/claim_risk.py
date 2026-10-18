@@ -33,6 +33,13 @@ CODES = ["industry_code", "wcio_cause_of_injury_code", "wcio_nature_of_injury_co
 PEERS = {"industry_code": "industry", "carrier_type": "carrier", "county_of_injury": "county",
          "wcio_nature_of_injury_code": "injury", "wcio_part_of_body_code": "body_part",
          "wcio_cause_of_injury_code": "cause"}
+EXTRA = ROOT / "data" / "modeling" / "extra_fields.csv.gz"  # from a_data/fetch_extra.py
+# accident_ind and occupational_disease_ind are WCB determinations made after assembly (ticket 01): excluded.
+EXTRA_CATS = ["district_name", "medical_fee_region",
+              "covid_19_indicator", "alternative_dispute_resolution"]
+EXTRA_PEERS = {"carrier_name": "insurer", "zip3": "zip"}
+# Wayfinder ticket 03 default: protected traits and the ZIP proxy stay out of the score; used for fairness only.
+PROTECTED = ["gender", "age", "peer_zip"]
 FALL_CAUSES = {"25", "26", "27", "28", "29", "31", "32", "33"}  # same rule as c_product/app.py
 LEVELS = ["none", "low", "medium", "high"]
 ASSUMPTIONS = {
@@ -48,6 +55,19 @@ SEED = 42
 def load(split):
     f = pd.read_csv(DATA / f"{split}.csv.gz", dtype={c: str for c in CODES})
     f[CODES] = f[CODES].fillna("MISSING")
+    if EXTRA.exists():
+        x = pd.read_csv(EXTRA, dtype=str)
+        x["claim_identifier"] = x["claim_identifier"].astype(int)
+        f = f.merge(x.drop(columns="assembly_date"), on="claim_identifier", how="left")
+        assembled = pd.to_datetime(f["assembly_date"])
+        for form in ("c2", "c3"):  # only filings dated on or before assembly were known then
+            lead = (assembled - pd.to_datetime(f[f"{form}_date"].str[:10], errors="coerce")).dt.days
+            f[f"{form}_lead_days"] = lead.where(lead >= 0)
+            f[f"{form}_filed_before"] = lead.ge(0).astype(int)
+        age = pd.to_numeric(f["age_at_injury"], errors="coerce")
+        f["age"] = age.where(age.between(14, 90))
+        f["zip3"] = f["zip_code"].str[:3]
+        f[EXTRA_CATS + ["gender"] + list(EXTRA_PEERS)] = f[EXTRA_CATS + ["gender"] + list(EXTRA_PEERS)].fillna("MISSING")
     return f
 
 
@@ -55,7 +75,7 @@ def peer_rates(train):
     """Smoothed dispute rate in the fitting years per category (shrunk toward the overall rate below ~200 claims)."""
     prior, k = train["disputed_within_90d"].mean(), 200
     rates = {}
-    for col in PEERS:
+    for col in {**PEERS, **(EXTRA_PEERS if "zip3" in train else {})}:
         g = train.groupby(col)["disputed_within_90d"].agg(["sum", "count"])
         rates[col] = ((g["sum"] + k * prior) / (g["count"] + k)).to_dict()
     return rates, float(prior)
@@ -78,7 +98,7 @@ def simulate(frame):
     }, index=frame.index)
 
 
-def features(frame, rates, prior, scenario):
+def features(frame, rates, prior, scenario, extra=True, protected=False):
     X = pd.DataFrame(index=frame.index)
     for col in CODES:
         X[col] = frame[col].astype("category")
@@ -86,13 +106,23 @@ def features(frame, rates, prior, scenario):
     X["assembly_month"] = frame["assembly_month"]
     for col, name in PEERS.items():
         X[f"peer_{name}"] = frame[col].map(rates[col]).fillna(prior).astype(float)
+    if extra and "zip3" in frame:
+        for col in EXTRA_CATS:
+            X[col] = frame[col].astype("category")
+        for col in ("c2_lead_days", "c2_filed_before", "c3_lead_days", "c3_filed_before", "age"):
+            X[col] = frame[col]
+        for col, name in EXTRA_PEERS.items():
+            X[f"peer_{name}"] = frame[col].map(rates[col]).fillna(prior).astype(float)
+        X["gender"] = frame["gender"].astype("category")
+        if not protected:
+            X = X.drop(columns=PROTECTED)
     if scenario:
         X = X.join(simulate(frame))
     return X
 
 
 def align(X, cats):
-    for col in CODES:
+    for col in cats:
         X[col] = pd.Categorical(X[col].astype(str), categories=cats[col])
     return X
 
@@ -102,11 +132,13 @@ GRID = [  # small search, chosen on 2024 validation recall@10%
     {"learning_rate": .05, "max_leaf_nodes": 63, "min_samples_leaf": 200},
     {"learning_rate": .05, "max_leaf_nodes": 15, "min_samples_leaf": 50},
     {"learning_rate": .10, "max_leaf_nodes": 63, "min_samples_leaf": 400},
+    {"learning_rate": .03, "max_leaf_nodes": 63, "min_samples_leaf": 100},
+    {"learning_rate": .03, "max_leaf_nodes": 127, "min_samples_leaf": 300},
 ]
 
 
 def fit(X, y, seed, sample=None, params=GRID[0]):
-    model = HistGradientBoostingClassifier(max_iter=400, l2_regularization=1.0, categorical_features="from_dtype",
+    model = HistGradientBoostingClassifier(max_iter=1500, l2_regularization=1.0, categorical_features="from_dtype",
                                            early_stopping=True, validation_fraction=.1, random_state=seed, **params)
     idx = sample if sample is not None else slice(None)
     return model.fit(X.iloc[idx], y[idx])
@@ -161,7 +193,7 @@ def main():
     # 1. Select tree settings and MLP blend weight on validation, real features only.
     rates, prior = peer_rates(train)
     Xtr = features(train, rates, prior, False)
-    cats = {c: Xtr[c].cat.categories for c in CODES}
+    cats = {c: Xtr[c].cat.categories for c in Xtr.select_dtypes("category")}
     Xva = align(features(val, rates, prior, False), cats)
     tried = []
     for params in GRID:
@@ -184,7 +216,7 @@ def main():
     bag = {}
     for name, scenario in [("real", False), ("scenario", True)]:
         Xfit = features(trval, rates, prior, scenario)
-        cats = {c: Xfit[c].cat.categories for c in CODES}
+        cats = {c: Xfit[c].cat.categories for c in Xfit.select_dtypes("category")}
         Xte = align(features(test, rates, prior, scenario), cats)
         model = fit(Xfit, y_trval, SEED, params=best)
         p_test = model.predict_proba(Xte)[:, 1]
@@ -192,6 +224,12 @@ def main():
             report["models"]["real_trees_only"] = {"test": {"recall_at_10pct": recall10(y["test"], p_test),
                                                             **bootstrap(y["test"], p_test)}}
             p_test = (1 - weight) * p_test + weight * mlp_test
+            Xp = features(trval, rates, prior, False, protected=True)
+            cp = {c: Xp[c].cat.categories for c in Xp.select_dtypes("category")}
+            pp = fit(Xp, y_trval, SEED, params=best).predict_proba(align(features(test, rates, prior, False, protected=True), cp))[:, 1]
+            report["models"]["real_with_protected_traits (not used)"] = {"test": {
+                "recall_at_10pct": recall10(y["test"], (1 - weight) * pp + weight * mlp_test),
+                **bootstrap(y["test"], (1 - weight) * pp + weight * mlp_test)}}
         report["models"][name] = {
             "test": {**{k: evaluate(y["test"], p_test)[k] for k in ("recall_at_10pct", "precision_at_10pct", "lift_over_random", "roc_auc")},
                      **bootstrap(y["test"], p_test), "calibration": calibration(y["test"], p_test)},
@@ -223,6 +261,7 @@ def main():
 
     # Self-checks: simulated columns only in the scenario model; ranges contain the shown score.
     assert "prior_disputes_5y" not in report["models"]["real"]["features"]
+    assert not set(PROTECTED) & set(report["models"]["real"]["features"])
     assert ((out.risk_low <= out.risk) & (out.risk <= out.risk_high)).all() and out["claim_id"].is_unique
 
 

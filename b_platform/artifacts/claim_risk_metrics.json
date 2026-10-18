@@ -20,155 +20,89 @@
   },
   "real_trees_only": {
    "test": {
-    "recall_at_10pct": 0.5058451584442321,
+    "recall_at_10pct": 0.5840747003896772,
     "recall_at_10pct_95ci": [
-     0.4991,
-     0.5142
+     0.5775,
+     0.5932
     ],
     "roc_auc_95ci": [
-     0.8388,
-     0.8456
+     0.8649,
+     0.8713
+    ]
+   }
+  },
+  "real_with_protected_traits (not used)": {
+   "test": {
+    "recall_at_10pct": 0.5846628924343799,
+    "recall_at_10pct_95ci": [
+     0.5772,
+     0.5918
+    ],
+    "roc_auc_95ci": [
+     0.8653,
+     0.8719
     ]
    }
   },
   "real": {
    "test": {
-    "recall_at_10pct": 0.510477170796265,
-    "precision_at_10pct": 0.258777487886694,
-    "lift_over_random": 5.104676576175323,
-    "roc_auc": 0.8436073401322973,
+    "recall_at_10pct": 0.5840747003896772,
+    "precision_at_10pct": 0.29608647036898994,
+    "lift_over_random": 5.840638156580263,
+    "roc_auc": 0.8680586752152684,
     "recall_at_10pct_95ci": [
-     0.5038,
-     0.5184
+     0.5775,
+     0.5932
     ],
     "roc_auc_95ci": [
-     0.8403,
-     0.8469
+     0.8649,
+     0.8713
     ],
     "calibration": {
      "deciles": [
       {
-       "predicted": 0.002127663308542825,
-       "observed": 0.0023108460678345137
+       "predicted": 0.002382279563915369,
+       "observed": 0.0017517704062616473
       },
       {
-       "predicted": 0.004757720316760535,
-       "observed": 0.004584591300458459
+       "predicted": 0.004544044698460287,
+       "observed": 0.004100041000410004
       },
       {
-       "predicted": 0.007966944035534437,
-       "observed": 0.007081625046589639
+       "predicted": 0.006988043479322707,
+       "observed": 0.006112560566530004
       },
       {
-       "predicted": 0.012037543499694494,
-       "observed": 0.012859219501285922
+       "predicted": 0.010194535431854699,
+       "observed": 0.0092810019009281
       },
       {
-       "predicted": 0.017282185417112014,
-       "observed": 0.01770472250177047
+       "predicted": 0.014316059527655516,
+       "observed": 0.01442468970144247
       },
       {
-       "predicted": 0.024460509856695848,
-       "observed": 0.02426388371226239
+       "predicted": 0.01976667655265307,
+       "observed": 0.020462169213566903
       },
       {
-       "predicted": 0.03487921041056508,
-       "observed": 0.03481307540348131
+       "predicted": 0.027845319746925917,
+       "observed": 0.030303030303030304
       },
       {
-       "predicted": 0.05260991491180027,
-       "observed": 0.05240402534476332
+       "predicted": 0.04237410518237267,
+       "observed": 0.043197912784196796
       },
       {
-       "predicted": 0.09239465256733748,
-       "observed": 0.09213910320921391
+       "predicted": 0.07970415059977355,
+       "observed": 0.08121808490812181
       },
       {
-       "predicted": 0.27015646838828655,
-       "observed": 0.258777487886694
+       "predicted": 0.30059483618151883,
+       "observed": 0.29608647036898994
       }
      ],
-     "max_abs_gap": 0.011378980501592528,
-     "brier": 0.04083166107966631
-    }
-   },
-   "features": [
-    "industry_code",
-    "wcio_cause_of_injury_code",
-    "wcio_nature_of_injury_code",
-    "wcio_part_of_body_code",
-    "county_of_injury",
-    "carrier_type",
-    "days_accident_to_assembly",
-    "assembly_month",
-    "peer_industry",
-    "peer_carrier",
-    "peer_county",
-    "peer_injury",
-    "peer_body_part",
-    "peer_cause"
-   ],
-   "iterations": 155
-  },
-  "scenario": {
-   "test": {
-    "recall_at_10pct": 0.5476067936181163,
-    "precision_at_10pct": 0.2775997018263138,
-    "lift_over_random": 5.475965884971022,
-    "roc_auc": 0.8587533795360524,
-    "recall_at_10pct_95ci": [
-     0.5396,
-     0.5551
-    ],
-    "roc_auc_95ci": [
-     0.8554,
-     0.8619
-    ],
-    "calibration": {
-     "deciles": [
-      {
-       "predicted": 0.0016661261525674324,
-       "observed": 0.0022363026462914647
-      },
-      {
-       "predicted": 0.0038322518898362187,
-       "observed": 0.004360952700436095
-      },
-      {
-       "predicted": 0.006502968014286072,
-       "observed": 0.006261647409616101
-      },
-      {
-       "predicted": 0.009809908700920932,
-       "observed": 0.010999664417017786
-      },
-      {
-       "predicted": 0.014134514056859343,
-       "observed": 0.014270278326316181
-      },
-      {
-       "predicted": 0.020141844693676306,
-       "observed": 0.022102124487513978
-      },
-      {
-       "predicted": 0.02924696836043197,
-       "observed": 0.030824853703082484
-      },
-      {
-       "predicted": 0.04569100320608662,
-       "observed": 0.049086843086097655
-      },
-      {
-       "predicted": 0.08513736334055955,
-       "observed": 0.08919452830891945
-      },
-      {
-       "predicted": 0.2848981614953392,
-       "observed": 0.2775997018263138
-      }
-     ],
-     "max_abs_gap": 0.00729845966902537,
-     "brier": 0.03915357490905187
+     "max_abs_gap": 0.004508365812528892,
+     "brier": 0.03860386940328383
     }
    },
    "features": [
@@ -186,13 +120,110 @@
     "peer_injury",
     "peer_body_part",
     "peer_cause",
+    "district_name",
+    "medical_fee_region",
+    "covid_19_indicator",
+    "alternative_dispute_resolution",
+    "c2_lead_days",
+    "c2_filed_before",
+    "c3_lead_days",
+    "c3_filed_before",
+    "peer_insurer"
+   ],
+   "iterations": 373
+  },
+  "scenario": {
+   "test": {
+    "recall_at_10pct": 0.61304315859128,
+    "precision_at_10pct": 0.31077152441297057,
+    "lift_over_random": 6.130317340076314,
+    "roc_auc": 0.8820365673174949,
+    "recall_at_10pct_95ci": [
+     0.6061,
+     0.62
+    ],
+    "roc_auc_95ci": [
+     0.8789,
+     0.8852
+    ],
+    "calibration": {
+     "deciles": [
+      {
+       "predicted": 0.0024425474395755684,
+       "observed": 0.0017890421170331718
+      },
+      {
+       "predicted": 0.004440104356556786,
+       "observed": 0.003280032800328003
+      },
+      {
+       "predicted": 0.0066127177305947285,
+       "observed": 0.0047335072679836
+      },
+      {
+       "predicted": 0.009333572229861604,
+       "observed": 0.008050989600805098
+      },
+      {
+       "predicted": 0.012941454475610282,
+       "observed": 0.012635580901263557
+      },
+      {
+       "predicted": 0.01789395059564286,
+       "observed": 0.017629519194931047
+      },
+      {
+       "predicted": 0.025616197293755565,
+       "observed": 0.02631480860263148
+      },
+      {
+       "predicted": 0.039907518201100334,
+       "observed": 0.041818859485650395
+      },
+      {
+       "predicted": 0.07787294702895577,
+       "observed": 0.07991352640799135
+      },
+      {
+       "predicted": 0.31201294264407303,
+       "observed": 0.31077152441297057
+      }
+     ],
+     "max_abs_gap": 0.0020405793790355814,
+     "brier": 0.03685840381128723
+    }
+   },
+   "features": [
+    "industry_code",
+    "wcio_cause_of_injury_code",
+    "wcio_nature_of_injury_code",
+    "wcio_part_of_body_code",
+    "county_of_injury",
+    "carrier_type",
+    "days_accident_to_assembly",
+    "assembly_month",
+    "peer_industry",
+    "peer_carrier",
+    "peer_county",
+    "peer_injury",
+    "peer_body_part",
+    "peer_cause",
+    "district_name",
+    "medical_fee_region",
+    "covid_19_indicator",
+    "alternative_dispute_resolution",
+    "c2_lead_days",
+    "c2_filed_before",
+    "c3_lead_days",
+    "c3_filed_before",
+    "peer_insurer",
     "prior_disputes_5y",
     "prior_claims_5y",
     "fall_video",
     "fall_intensity",
     "descent_ms"
    ],
-   "iterations": 253
+   "iterations": 301
   }
  },
  "selection": {
@@ -201,43 +232,55 @@
     "learning_rate": 0.08,
     "max_leaf_nodes": 31,
     "min_samples_leaf": 100,
-    "val_recall_at_10pct": 0.5116945548673385
+    "val_recall_at_10pct": 0.583525931404271
    },
    {
     "learning_rate": 0.05,
     "max_leaf_nodes": 63,
     "min_samples_leaf": 200,
-    "val_recall_at_10pct": 0.509568272164186
+    "val_recall_at_10pct": 0.5854673199593233
    },
    {
     "learning_rate": 0.05,
     "max_leaf_nodes": 15,
     "min_samples_leaf": 50,
-    "val_recall_at_10pct": 0.5093833780160858
+    "val_recall_at_10pct": 0.5868540260700749
    },
    {
     "learning_rate": 0.1,
     "max_leaf_nodes": 63,
     "min_samples_leaf": 400,
-    "val_recall_at_10pct": 0.507811777757234
+    "val_recall_at_10pct": 0.5828788018859203
+   },
+   {
+    "learning_rate": 0.03,
+    "max_leaf_nodes": 63,
+    "min_samples_leaf": 100,
+    "val_recall_at_10pct": 0.5860220024036239
+   },
+   {
+    "learning_rate": 0.03,
+    "max_leaf_nodes": 127,
+    "min_samples_leaf": 300,
+    "val_recall_at_10pct": 0.5832485901821207
    }
   ],
   "chosen": {
-   "learning_rate": 0.08,
-   "max_leaf_nodes": 31,
-   "min_samples_leaf": 100
+   "learning_rate": 0.05,
+   "max_leaf_nodes": 15,
+   "min_samples_leaf": 50
   },
   "mlp_blend_val_recall": {
-   "0": 0.5116945548673385,
-   "0.25": 0.5179809559027457,
-   "0.5": 0.5178885088286955,
-   "0.75": 0.5171489322362948
+   "0": 0.5868540260700749,
+   "0.25": 0.5860220024036239,
+   "0.5": 0.5738189886290099,
+   "0.75": 0.5474715725247296
   },
-  "mlp_weight": 0.25
+  "mlp_weight": 0
  },
  "per_claim_range": {
   "members": 6,
-  "median_width": 0.014709999999999999,
-  "p90_width": 0.10015
+  "median_width": 0.013160000000000002,
+  "p90_width": 0.10431600000000005
  }
 }
