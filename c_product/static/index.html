@@ -68,6 +68,14 @@ dt{color:var(--muted)} dd{margin:0}
 .claimhead .big{font-size:22px;font-weight:600}
 .evidence{border:1px dashed var(--line2);border-radius:4px;padding:8px 10px;margin-top:4px;font-size:13px}
 .evidence.has{border-style:solid;background:var(--warn-bg);color:var(--warn)}
+.rng{position:relative;height:6px;background:var(--chip);border-radius:3px;margin:4px 0 6px}
+.rng i{position:absolute;top:0;height:100%;background:color-mix(in srgb,var(--accent) 35%,transparent);border-radius:3px}
+.rng b{position:absolute;top:-3px;width:2px;height:12px;background:var(--accent);margin-left:-1px}
+.peers{display:grid;grid-template-columns:max-content 1fr max-content;gap:3px 8px;align-items:center;font-size:12px}
+.peers .pb{position:relative;height:8px;background:var(--chip);border-radius:2px}
+.peers .pb i{display:block;height:100%;background:var(--accent);border-radius:2px}
+.peers .pb b{position:absolute;top:-2px;width:2px;height:12px;background:var(--flag);margin-left:-1px}
+.peers .lbl{color:var(--muted);max-width:170px;overflow:hidden;text-overflow:ellipsis;white-space:nowrap}
 .actions{display:flex;gap:8px;align-items:center;flex-wrap:wrap;padding:10px 14px;border-top:1px solid var(--line)}
 .btn{padding:7px 12px;border:1px solid var(--line2);background:var(--panel);border-radius:3px;cursor:pointer}
 .btn.primary{background:var(--accent);color:var(--accent-ink);border-color:var(--accent)}
@@ -95,6 +103,7 @@ footer{padding:8px 20px;font-size:12px;color:var(--muted);border-top:1px solid v
   <label class="sel">Assembly day <select id="day" aria-label="Assembly day"></select></label>
   <span class="badge" id="device">Scoring: …</span>
   <span class="badge" id="recall" hidden></span>
+  <span class="badge" id="crm" hidden></span>
   <div class="progress" aria-live="polite" id="progress"></div>
 </header>
 
@@ -151,6 +160,7 @@ footer{padding:8px 20px;font-size:12px;color:var(--muted);border-top:1px solid v
 const $ = s => document.querySelector(s);
 const esc = s => String(s ?? "").replace(/[&<>"]/g, c => ({"&":"&amp;","<":"&lt;",">":"&gt;",'"':"&quot;"}[c]));
 const api = (p, o) => fetch(p, o).then(r => r.json());
+const pct = v => (v*100).toFixed(1) + "%";
 const state = { rows: [], sel: null, lang: "en", sortK: "score", sortDir: -1,
   decisions: {}, letters: {}, checks: {}, reviewed: {}, abort: null };
 
@@ -161,6 +171,11 @@ api("/api/meta").then(m => {
   const r = m.validation?.recall_at_10pct ?? m.test?.recall_at_10pct;
   if (r != null) { const which = m.validation?.recall_at_10pct != null ? "Validation" : "Test";
     $("#recall").innerHTML = `${which} recall@10%: <b>${(r*100).toFixed(1)}%</b>`; $("#recall").hidden = false; }
+  const cr = m.claim_risk?.models, t = cr?.real?.test, base = cr?.["logistic_baseline (teammate)"]?.test?.recall_at_10pct;
+  if (t?.recall_at_10pct != null) {   // the real-data model only; the scenario model is never quoted as a result
+    const ci = t.recall_at_10pct_95ci;
+    $("#crm").innerHTML = `Claim risk model: recall@10% <b>${pct(t.recall_at_10pct)}</b>${ci ? ` (95% CI ${pct(ci[0])}–${pct(ci[1])})` : ""}${base != null ? ` vs baseline ${pct(base)}` : ""}`;
+    $("#crm").hidden = false; }
 }).catch(() => $("#device").textContent = "Scoring: device unknown");
 
 api("/api/days").then(days => {
@@ -238,6 +253,7 @@ async function select(id) {
       <span class="muted">percentile ${(+c.rank_pct).toFixed(0)} · typical lead ≈ ${d(c.lead_days_est)} days</span>
       ${c.flagged ? '<span class="tag flag">Top 10%</span>' : ""}</div>
     <div class="chips">${[c.top1, c.top2, c.top3].filter(Boolean).map(t => `<span class="chip">${esc(t)}</span>`).join("")}</div>
+    ${analyticsHtml(c.analytics, w, c)}
     <h3>Submitter <span class="tag syn">Synthetic demo profile</span></h3>
     <dl><dt>Name</dt><dd>${esc(s.name)}</dd><dt>Age band</dt><dd>${esc(s.age_band)}</dd><dt>Occupation</dt><dd>${esc(s.occupation)}</dd>
       <dt>Preferred language</dt><dd>${s.language === "es" ? "Spanish" : "English"}</dd><dt>Contact preference</dt><dd>${esc(s.contact)}</dd></dl>
@@ -248,11 +264,38 @@ async function select(id) {
     <h3>Claim submission</h3>
     <dl><dt>Nature of injury</dt><dd>${esc(w.nature)}</dd><dt>Body part</dt><dd>${esc(w.body_part)}</dd><dt>Cause</dt><dd>${esc(w.cause)}</dd>
       <dt>Accident date</dt><dd>${d(w.accident_date)}</dd><dt>Assembly date</dt><dd>${esc(c.assembly_date)}</dd><dt>Claim ID</dt><dd>${esc(c.claim_id)}</dd></dl>
-    <div class="evidence ${s.fall_video ? "has" : ""}">Evidence · ${s.fall_video
+    ${c.analytics ? "" : `<div class="evidence ${s.fall_video ? "has" : ""}">Evidence · ${s.fall_video
       ? "<b>Fall video analyzed:</b> fall from standing, sideways landing, 0.6 s descent <span class='muted'>(separate fall-detection model, demo placeholder)</span>"
-      : "Fall video: not submitted"}</div>`;
+      : "Fall video: not submitted"}</div>`}`;
   showLetter();
   if (!state.letters[key()]) draft();
+}
+function analyticsHtml(a, w, c) {
+  if (!a) return "";
+  const peers = [["Industry", w.industry, a.peer_industry], ["Carrier", c.carrier_type, a.peer_carrier], ["County", c.county, a.peer_county],
+    ["Injury", w.nature, a.peer_injury], ["Body part", w.body_part, a.peer_body_part], ["Cause", w.cause, a.peer_cause]].filter(p => p[2] != null);
+  const max = Math.max(a.overall_rate, ...peers.map(p => p[2])) * 1.15 || 1;
+  const x = v => Math.min(100, v / max * 100);
+  const hiMax = Math.max(a.risk_high, a.risk) * 1.25 || 1;
+  const sim = '<span class="tag syn">Simulated</span>';
+  return `
+    <h3>Analytics <span class="muted" style="text-transform:none;letter-spacing:0">claim risk model</span></h3>
+    <div><b>${pct(a.risk)}</b> <span class="muted">(range ${pct(a.risk_low)}–${pct(a.risk_high)} across 6-model bag)</span>
+      · Without simulated history/video: <b>${pct(a.risk_real_only)}</b>
+      ${a.peer_industry ? ` · <b>${(a.risk / a.peer_industry).toFixed(1)}×</b> industry average` : ""}</div>
+    <div class="rng" role="img" aria-label="Risk ${pct(a.risk)}, range ${pct(a.risk_low)} to ${pct(a.risk_high)}">
+      <i style="left:${a.risk_low/hiMax*100}%;width:${(a.risk_high-a.risk_low)/hiMax*100}%"></i><b style="left:${a.risk/hiMax*100}%"></b></div>
+    <div class="peers" role="table" aria-label="2023 dispute rate of claims sharing each attribute; red line is the overall rate ${pct(a.overall_rate)}">
+      ${peers.map(([k, word, v]) => `<span class="lbl" role="cell" title="${esc(k)}: ${esc(word)}">${esc(k)} · ${esc(word)}</span>
+        <span class="pb" role="cell" aria-hidden="true"><i style="width:${x(v)}%"></i><b style="left:${x(a.overall_rate)}%"></b></span>
+        <span role="cell">${pct(v)}</span>`).join("")}
+      <span class="muted" style="grid-column:1/-1">Peer rates = 2023 dispute rate of claims sharing that attribute · overall ${pct(a.overall_rate)} (red line)</span></div>
+    <h3>Claimant history ${sim}</h3>
+    <dl><dt>Prior claims (5y)</dt><dd>${a.prior_claims_5y}</dd><dt>Prior disputes (5y)</dt><dd>${a.prior_disputes_5y}</dd></dl>
+    <h3>Fall video evidence ${sim}</h3>
+    <div class="evidence ${a.fall_video ? "has" : ""}">${a.fall_video
+      ? `<b>Fall video analyzed:</b> ${esc(a.fall_intensity)} intensity${a.descent_ms != null ? `, ${(a.descent_ms/1000).toFixed(1)} s descent` : ""}`
+      : "No video submitted"}</div>`;
 }
 function key() { return state.sel + ":" + state.lang; }
 function setLang(l, quiet) {

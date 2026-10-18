@@ -1,0 +1,200 @@
+{
+ "target": "recorded dispute 1-90 days after assembly",
+ "split": "train 2023 / validation 2024 / test 2025",
+ "simulated_feature_assumptions": {
+  "prior_disputes_5y": "Poisson mean 0.10 if not disputed, 0.35 if disputed (repeat-dispute pattern)",
+  "prior_claims_5y": "prior_disputes + Poisson mean 0.6",
+  "fall_video": "fall-cause claim and md5(claim_id) % 3 == 0, label-independent (matches dashboard card)",
+  "fall_intensity": "only with a fall video; P(low,medium,high) = .30/.35/.35 if not disputed, .45/.35/.20 if disputed (a clearly recorded hard fall is harder to contest; mirrors FallWatch's 10-35% assumed reduction)"
+ },
+ "models": {
+  "logistic_baseline (teammate)": {
+   "validation": {
+    "recall_at_10pct": 0.44698160303226403,
+    "roc_auc": 0.8038697505628939
+   },
+   "test": {
+    "recall_at_10pct": 0.4361444011469745,
+    "roc_auc": 0.8027882232197308
+   }
+  },
+  "real": {
+   "validation": {
+    "recall_at_10pct": 0.5116945548673385,
+    "precision_at_10pct": 0.2681945924992732,
+    "roc_auc": 0.8405757407683447
+   },
+   "test": {
+    "recall_at_10pct": 0.5001102860083817,
+    "precision_at_10pct": 0.25352217666790905,
+    "lift_over_random": 5.001009660254147,
+    "roc_auc": 0.8354876833457294,
+    "recall_at_10pct_95ci": [
+     0.4926,
+     0.508
+    ],
+    "roc_auc_95ci": [
+     0.8317,
+     0.8388
+    ],
+    "calibration": {
+     "deciles": [
+      {
+       "predicted": 0.0025198891856079123,
+       "observed": 0.0021990309355199404
+      },
+      {
+       "predicted": 0.004958373534476045,
+       "observed": 0.004920049200492005
+      },
+      {
+       "predicted": 0.007916166939193342,
+       "observed": 0.008497950055907566
+      },
+      {
+       "predicted": 0.01167449943727766,
+       "observed": 0.014051958701405196
+      },
+      {
+       "predicted": 0.016545798022845337,
+       "observed": 0.01874836930187484
+      },
+      {
+       "predicted": 0.02322886564801487,
+       "observed": 0.027320163995527395
+      },
+      {
+       "predicted": 0.03320580126712999,
+       "observed": 0.03473982406441032
+      },
+      {
+       "predicted": 0.05017712064358876,
+       "observed": 0.05426558831202713
+      },
+      {
+       "predicted": 0.08780597068235824,
+       "observed": 0.08867270490886726
+      },
+      {
+       "predicted": 0.2666946877189847,
+       "observed": 0.25352217666790905
+      }
+     ],
+     "max_abs_gap": 0.013172511051075642,
+     "brier": 0.041327957612708396
+    }
+   },
+   "features": [
+    "industry_code",
+    "wcio_cause_of_injury_code",
+    "wcio_nature_of_injury_code",
+    "wcio_part_of_body_code",
+    "county_of_injury",
+    "carrier_type",
+    "days_accident_to_assembly",
+    "assembly_month",
+    "peer_industry",
+    "peer_carrier",
+    "peer_county",
+    "peer_injury",
+    "peer_body_part",
+    "peer_cause"
+   ],
+   "iterations": 129
+  },
+  "scenario": {
+   "validation": {
+    "recall_at_10pct": 0.5422945363779237,
+    "precision_at_10pct": 0.28423296831088285,
+    "roc_auc": 0.8563007299537009
+   },
+   "test": {
+    "recall_at_10pct": 0.536431144768767,
+    "precision_at_10pct": 0.2719344017890421,
+    "lift_over_random": 5.364211479155286,
+    "roc_auc": 0.853132962020795,
+    "recall_at_10pct_95ci": [
+     0.5288,
+     0.544
+    ],
+    "roc_auc_95ci": [
+     0.8497,
+     0.8563
+    ],
+    "calibration": {
+     "deciles": [
+      {
+       "predicted": 0.0030591077143835425,
+       "observed": 0.002050020500205002
+      },
+      {
+       "predicted": 0.0053200717474705,
+       "observed": 0.004099888184867686
+      },
+      {
+       "predicted": 0.007960039111927891,
+       "observed": 0.007454342154304882
+      },
+      {
+       "predicted": 0.011228001184433357,
+       "observed": 0.011852845801185284
+      },
+      {
+       "predicted": 0.015514335571680464,
+       "observed": 0.016288344701628835
+      },
+      {
+       "predicted": 0.021447817754537774,
+       "observed": 0.022698471859858366
+      },
+      {
+       "predicted": 0.030565871737541175,
+       "observed": 0.0331730590033173
+      },
+      {
+       "predicted": 0.04684234352923122,
+       "observed": 0.049198658218412225
+      },
+      {
+       "predicted": 0.08438861004511203,
+       "observed": 0.08818815460881882
+      },
+      {
+       "predicted": 0.27989166059024223,
+       "observed": 0.2719344017890421
+      }
+     ],
+     "max_abs_gap": 0.007957258801200129,
+     "brier": 0.039567242070457455
+    }
+   },
+   "features": [
+    "industry_code",
+    "wcio_cause_of_injury_code",
+    "wcio_nature_of_injury_code",
+    "wcio_part_of_body_code",
+    "county_of_injury",
+    "carrier_type",
+    "days_accident_to_assembly",
+    "assembly_month",
+    "peer_industry",
+    "peer_carrier",
+    "peer_county",
+    "peer_injury",
+    "peer_body_part",
+    "peer_cause",
+    "prior_disputes_5y",
+    "prior_claims_5y",
+    "fall_video",
+    "fall_intensity",
+    "descent_ms"
+   ],
+   "iterations": 93
+  }
+ },
+ "per_claim_range": {
+  "members": 6,
+  "median_width": 0.01634,
+  "p90_width": 0.11337600000000006
+ }
+}
