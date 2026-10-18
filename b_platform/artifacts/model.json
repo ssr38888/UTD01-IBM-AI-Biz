@@ -1,0 +1,31 @@
+{
+ "k": 298,
+ "architecture": "k-256-256-256-1 ReLU, sigmoid",
+ "threshold_top10pct": 0.14845015108585358,
+ "validation": {
+  "claims": 206377,
+  "disputed_claims": 10817,
+  "contact_budget": 20638,
+  "disputed_claims_reached": 5558,
+  "recall_at_10pct": 0.5138208375704909,
+  "precision_at_10pct": 0.2693090415737959,
+  "lift_over_random": 5.138133685206183,
+  "roc_auc": 0.8402698060008835,
+  "average_precision": 0.31536064233716254
+ },
+ "test": {
+  "claims": 268295,
+  "disputed_claims": 13601,
+  "contact_budget": 26830,
+  "disputed_claims_reached": 6790,
+  "recall_at_10pct": 0.49922799794132783,
+  "precision_at_10pct": 0.25307491613865074,
+  "lift_over_random": 4.992186944005536,
+  "roc_auc": 0.8349812826941307,
+  "average_precision": 0.2957782635233409
+ },
+ "note": "test evaluated once after choosing the epoch on validation",
+ "device": "cpu",
+ "scored_claims": 268295,
+ "score_seconds": 0.339
+}

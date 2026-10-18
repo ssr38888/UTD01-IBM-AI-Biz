@@ -1,0 +1,337 @@
+<!doctype html>
+<html lang="en">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<title>ClaimClock</title>
+<style>
+:root{
+  --bg:#f4f4f4;--panel:#fff;--ink:#161616;--muted:#525252;--line:#e0e0e0;--line2:#c6c6c6;
+  --accent:#0f62fe;--accent-ink:#fff;--flag:#da1e28;--flag-bg:#fff1f1;--ok:#198038;--ok-bg:#defbe6;
+  --warn:#8a3800;--warn-bg:#fff8e1;--hold:#6929c4;--hold-bg:#f6f2ff;--chip:#e8e8e8;--focus:#0f62fe;
+  font-family:"IBM Plex Sans",system-ui,-apple-system,"Segoe UI",Roboto,Helvetica,Arial,sans-serif;
+}
+@media (prefers-color-scheme:dark){:root{
+  --bg:#161616;--panel:#262626;--ink:#f4f4f4;--muted:#a8a8a8;--line:#393939;--line2:#525252;
+  --accent:#78a9ff;--accent-ink:#000;--flag:#ff8389;--flag-bg:#3b1a1c;--ok:#42be65;--ok-bg:#163a22;
+  --warn:#f1c21b;--warn-bg:#3a2f00;--hold:#be95ff;--hold-bg:#2b1f45;--chip:#393939;--focus:#78a9ff;
+}}
+*{box-sizing:border-box}
+html,body{margin:0;background:var(--bg);color:var(--ink);font-size:14px;line-height:1.4}
+button,select,input,textarea{font:inherit;color:inherit}
+:focus-visible{outline:2px solid var(--focus);outline-offset:2px}
+header{display:flex;align-items:center;gap:16px;padding:10px 20px;background:var(--panel);border-bottom:1px solid var(--line);flex-wrap:wrap}
+.brand{font-weight:600;font-size:18px;letter-spacing:-.01em}
+.brand small{display:block;font-weight:400;font-size:11px;color:var(--muted)}
+label.sel{display:flex;align-items:center;gap:6px;color:var(--muted);font-size:12px}
+select{padding:5px 8px;border:1px solid var(--line2);background:var(--panel);border-radius:3px}
+.badge{font-size:12px;padding:3px 8px;border:1px solid var(--line2);border-radius:999px;color:var(--muted);white-space:nowrap}
+.badge b{color:var(--ink);font-weight:600}
+.progress{margin-left:auto;display:flex;gap:6px;align-items:center;font-size:12px;color:var(--muted)}
+.progress span{padding:3px 10px;border-radius:3px;font-weight:600;color:var(--ink);background:var(--chip)}
+.progress .ap{background:var(--ok-bg);color:var(--ok)} .progress .hd{background:var(--hold-bg);color:var(--hold)}
+main{display:grid;grid-template-columns:minmax(560px,7fr) minmax(420px,5fr);gap:12px;padding:12px 20px;min-height:calc(100vh - 110px)}
+@media (max-width:1000px){main{grid-template-columns:1fr}}
+section.panel{background:var(--panel);border:1px solid var(--line);border-radius:4px;display:flex;flex-direction:column;min-width:0}
+.ph{display:flex;align-items:center;gap:10px;padding:10px 14px;border-bottom:1px solid var(--line)}
+.ph h2{font-size:14px;font-weight:600;margin:0}
+.ph .n{color:var(--muted);font-size:12px}
+.ph label{margin-left:auto;font-size:12px;color:var(--muted);display:flex;gap:6px;align-items:center}
+.tbl{overflow:auto;max-height:calc(100vh - 180px)}
+table{width:100%;border-collapse:collapse;font-variant-numeric:tabular-nums}
+th,td{text-align:left;padding:6px 8px;border-bottom:1px solid var(--line);vertical-align:top;white-space:nowrap}
+th{position:sticky;top:0;background:var(--panel);font-size:11px;text-transform:uppercase;letter-spacing:.04em;color:var(--muted);z-index:1}
+th button{all:unset;cursor:pointer;display:inline-flex;gap:4px;align-items:center}
+th button:focus-visible{outline:2px solid var(--focus)}
+th .dir{opacity:.5}
+tbody tr{cursor:pointer}
+tbody tr:hover{background:color-mix(in srgb,var(--accent) 7%,transparent)}
+tbody tr[aria-selected="true"]{background:color-mix(in srgb,var(--accent) 14%,transparent);box-shadow:inset 3px 0 0 var(--accent)}
+td.score{font-weight:600;font-size:15px}
+td.score .bar{display:inline-block;height:6px;width:40px;background:var(--chip);border-radius:3px;margin-left:8px;vertical-align:middle;overflow:hidden}
+td.score .bar i{display:block;height:100%;background:var(--accent)}
+tr.flag td.score .bar i{background:var(--flag)}
+.tag{display:inline-block;font-size:11px;padding:1px 6px;border-radius:3px;font-weight:600}
+.tag.flag{background:var(--flag-bg);color:var(--flag)} .tag.ap{background:var(--ok-bg);color:var(--ok)} .tag.hd{background:var(--hold-bg);color:var(--hold)}
+.tag.syn{background:var(--warn-bg);color:var(--warn);font-weight:500}
+.chips{white-space:normal;min-width:260px}
+.chip{display:inline-block;white-space:nowrap;font-size:11px;background:var(--chip);padding:1px 7px;border-radius:999px;margin:1px 3px 1px 0;color:var(--ink)}
+.muted{color:var(--muted)}
+.detail{padding:12px 14px;overflow:auto}
+.detail h3{font-size:12px;text-transform:uppercase;letter-spacing:.04em;color:var(--muted);margin:10px 0 4px;display:flex;gap:8px;align-items:center}
+.detail h3:first-child{margin-top:0}
+dl{display:grid;grid-template-columns:max-content 1fr max-content 1fr;gap:3px 14px;margin:0}
+@media (max-width:1400px){.detail dd{min-width:0;overflow-wrap:anywhere}}
+dt{color:var(--muted)} dd{margin:0}
+.claimhead{display:flex;align-items:baseline;gap:12px;flex-wrap:wrap;margin-bottom:4px}
+.claimhead .big{font-size:22px;font-weight:600}
+.evidence{border:1px dashed var(--line2);border-radius:4px;padding:8px 10px;margin-top:4px;font-size:13px}
+.evidence.has{border-style:solid;background:var(--warn-bg);color:var(--warn)}
+.actions{display:flex;gap:8px;align-items:center;flex-wrap:wrap;padding:10px 14px;border-top:1px solid var(--line)}
+.btn{padding:7px 12px;border:1px solid var(--line2);background:var(--panel);border-radius:3px;cursor:pointer}
+.btn.primary{background:var(--accent);color:var(--accent-ink);border-color:var(--accent)}
+.btn:disabled{opacity:.45;cursor:not-allowed}
+.seg{display:inline-flex;border:1px solid var(--line2);border-radius:3px;overflow:hidden}
+.seg button{all:unset;padding:5px 10px;cursor:pointer;font-size:12px}
+.seg button[aria-pressed="true"]{background:var(--accent);color:var(--accent-ink)}
+.seg button:focus-visible{outline:2px solid var(--focus);outline-offset:-2px}
+.letter{padding:0 14px 12px}
+.letter textarea{width:100%;min-height:170px;resize:vertical;padding:10px;border:1px solid var(--line2);border-radius:3px;background:var(--bg);font-family:"IBM Plex Mono",ui-monospace,Menlo,Consolas,monospace;font-size:12.5px;line-height:1.5}
+.letter .caret::after{content:"▍";animation:blink 1s steps(2) infinite;color:var(--accent)}
+@keyframes blink{50%{opacity:0}}
+.check{margin-top:8px;padding:8px 10px;border-radius:3px;font-size:13px}
+.check.pass{background:var(--ok-bg);color:var(--ok)} .check.fail{background:var(--flag-bg);color:var(--flag)} .check.wait{background:var(--chip);color:var(--muted)}
+.check ul{margin:4px 0 0 18px;padding:0}
+.review{display:flex;gap:8px;align-items:center;margin-top:8px}
+footer{padding:8px 20px;font-size:12px;color:var(--muted);border-top:1px solid var(--line);background:var(--panel)}
+.empty{padding:30px;color:var(--muted);text-align:center}
+.sr{position:absolute;left:-9999px}
+</style>
+</head>
+<body>
+<header>
+  <div class="brand">ClaimClock<small>NY WCB Advocate for Injured Workers · daily outreach review</small></div>
+  <label class="sel">Assembly day <select id="day" aria-label="Assembly day"></select></label>
+  <span class="badge" id="device">Scoring: …</span>
+  <span class="badge" id="recall" hidden></span>
+  <div class="progress" aria-live="polite" id="progress"></div>
+</header>
+
+<main>
+  <section class="panel" aria-labelledby="qh">
+    <div class="ph"><h2 id="qh">Today's claims</h2><span class="n" id="qn"></span>
+      <label><input type="checkbox" id="onlyflag" checked> Top 10% only</label></div>
+    <div class="tbl">
+      <table id="queue">
+        <thead><tr>
+          <th><button data-k="claim_id">Claim <span class="dir"></span></button></th>
+          <th><button data-k="score">Dispute risk <span class="dir">▼</span></button></th>
+          <th><button data-k="rank_pct">Pctl <span class="dir"></span></button></th>
+          <th>Top reasons</th>
+          <th><button data-k="days_accident_to_assembly">Days since accident <span class="dir"></span></button></th>
+          <th><button data-k="carrier_type">Carrier <span class="dir"></span></button></th>
+          <th><button data-k="county">County <span class="dir"></span></button></th>
+          <th>Status</th>
+        </tr></thead>
+        <tbody></tbody>
+      </table>
+      <div class="empty" id="qempty" hidden>No claims for this day.</div>
+    </div>
+  </section>
+
+  <section class="panel" aria-labelledby="dh">
+    <div class="ph"><h2 id="dh">Claim detail</h2><span class="n" id="dstatus"></span>
+      <label>Letter language
+        <span class="seg" role="group" aria-label="Letter language">
+          <button type="button" data-lang="en" aria-pressed="true">EN</button>
+          <button type="button" data-lang="es" aria-pressed="false">ES</button>
+        </span></label></div>
+    <div class="detail" id="detail"><div class="empty">Select a claim.</div></div>
+    <div class="actions">
+      <button class="btn primary" id="draft" type="button" disabled>Draft letter</button>
+      <button class="btn" id="approve" type="button" disabled title="Requires advocate review">Approve outreach</button>
+      <button class="btn" id="hold" type="button" disabled>Hold</button>
+      <span class="muted" id="hint"></span>
+    </div>
+    <div class="letter">
+      <label for="lt" class="sr">Letter draft</label>
+      <textarea id="lt" aria-live="polite" aria-busy="false" spellcheck="false" placeholder="Letter draft appears here."></textarea>
+      <div class="check wait" id="check" role="status">No draft yet.</div>
+      <div class="review">
+        <input type="checkbox" id="reviewed"><label for="reviewed">Reviewed by advocate (required before approval)</label>
+      </div>
+    </div>
+  </section>
+</main>
+
+<footer>Model ranks for outreach only; it decides nothing. Every letter is human-reviewed. Prototype on retrospective 2023–2025 public NY WCB data; not validated for deployment. Submitter profiles are synthetic demo data.</footer>
+
+<script>
+const $ = s => document.querySelector(s);
+const esc = s => String(s ?? "").replace(/[&<>"]/g, c => ({"&":"&amp;","<":"&lt;",">":"&gt;",'"':"&quot;"}[c]));
+const api = (p, o) => fetch(p, o).then(r => r.json());
+const state = { rows: [], sel: null, lang: "en", sortK: "score", sortDir: -1,
+  decisions: {}, letters: {}, checks: {}, reviewed: {}, abort: null };
+
+/* ---------- header ---------- */
+api("/api/meta").then(m => {
+  const dev = (m.benchmark?.device || m.device || "").toLowerCase();
+  $("#device").innerHTML = dev.includes("nnpa") ? "Scored on <b>IBM Telum (NNPA)</b>" : dev ? `Scored on <b>${esc(dev.toUpperCase())}</b>` : "Scoring: <b>device unknown</b>";
+  const r = m.validation?.recall_at_10pct ?? m.test?.recall_at_10pct;
+  if (r != null) { const which = m.validation?.recall_at_10pct != null ? "Validation" : "Test";
+    $("#recall").innerHTML = `${which} recall@10%: <b>${(r*100).toFixed(1)}%</b>`; $("#recall").hidden = false; }
+}).catch(() => $("#device").textContent = "Scoring: device unknown");
+
+api("/api/days").then(days => {
+  $("#day").innerHTML = days.map(d => `<option value="${d.date}">${d.date} · ${d.claims} claims, ${d.flagged} flagged</option>`).join("");
+  loadDay();
+});
+$("#day").onchange = loadDay;
+$("#onlyflag").onchange = renderQueue;
+
+async function loadDay() {
+  const q = await api("/api/queue?date=" + $("#day").value);
+  state.rows = q.rows; state.sel = null;
+  $("#qn").textContent = `${q.claims} assembled · ${q.flagged} in top 10%`;
+  renderQueue();
+  const first = visibleRows()[0];
+  if (first) select(first.claim_id);   // pre-start the letter so the demo shows one within seconds
+}
+
+/* ---------- queue ---------- */
+function visibleRows() {
+  const k = state.sortK, d = state.sortDir;
+  const num = v => (v === "" || v == null || isNaN(+v)) ? -Infinity : +v;
+  const rows = state.rows.filter(r => !$("#onlyflag").checked || r.flagged);
+  return rows.sort((a, b) => {
+    const x = ["score","rank_pct","days_accident_to_assembly"].includes(k) ? num(a[k]) - num(b[k]) : String(a[k]).localeCompare(String(b[k]));
+    return (x || b.score - a.score) * (x ? d : 1);
+  });
+}
+document.querySelectorAll("th button").forEach(b => b.onclick = () => {
+  const k = b.dataset.k;
+  state.sortDir = state.sortK === k ? -state.sortDir : (k === "score" || k === "rank_pct" ? -1 : 1);
+  state.sortK = k;
+  document.querySelectorAll("th .dir").forEach(d => d.textContent = "");
+  b.querySelector(".dir").textContent = state.sortDir < 0 ? "▼" : "▲";
+  renderQueue();
+});
+function statusTag(id) {
+  const d = state.decisions[id];
+  return d === "approved" ? '<span class="tag ap">Approved</span>' : d === "held" ? '<span class="tag hd">Held</span>' : '<span class="muted">Pending</span>';
+}
+function renderQueue() {
+  const rows = visibleRows();
+  $("#qempty").hidden = rows.length > 0;
+  $("#queue tbody").innerHTML = rows.map(r => `
+    <tr data-id="${esc(r.claim_id)}" class="${r.flagged ? "flag" : ""}" tabindex="0" aria-selected="${r.claim_id === state.sel}">
+      <td>${esc(r.claim_id)} ${r.flagged ? '<span class="tag flag">Top 10%</span>' : ""}</td>
+      <td class="score">${(r.score*100).toFixed(1)}%<span class="bar" aria-hidden="true"><i style="width:${Math.min(100, r.score*100)}%"></i></span></td>
+      <td>${(+r.rank_pct).toFixed(0)}</td>
+      <td class="chips">${[r.top1, r.top2, r.top3].filter(Boolean).map(t => `<span class="chip">${esc(t)}</span>`).join("") || '<span class="muted">—</span>'}</td>
+      <td>${r.days_accident_to_assembly === "" ? '<span class="muted">—</span>' : Math.round(+r.days_accident_to_assembly)}</td>
+      <td>${esc(r.carrier_type)}</td>
+      <td>${esc(r.county)}</td>
+      <td>${statusTag(r.claim_id)}</td></tr>`).join("");
+  renderProgress();
+}
+$("#queue tbody").addEventListener("click", e => { const tr = e.target.closest("tr"); if (tr) select(tr.dataset.id); });
+$("#queue tbody").addEventListener("keydown", e => { if (e.key === "Enter" || e.key === " ") { const tr = e.target.closest("tr"); if (tr) { e.preventDefault(); select(tr.dataset.id); } } });
+function renderProgress() {
+  const ids = state.rows.filter(r => r.flagged).map(r => r.claim_id);
+  const n = k => ids.filter(id => state.decisions[id] === k).length;
+  const ap = n("approved"), hd = n("held");
+  $("#progress").innerHTML = `Top-10% review <span class="ap">${ap} approved</span><span class="hd">${hd} held</span><span>${ids.length - ap - hd} pending</span>`;
+}
+
+/* ---------- detail ---------- */
+async function select(id) {
+  state.sel = id;
+  document.querySelectorAll("#queue tbody tr").forEach(tr => tr.setAttribute("aria-selected", tr.dataset.id === id));
+  const c = await api("/api/claim?id=" + encodeURIComponent(id));
+  if (state.sel !== id) return;
+  const s = c.submitter, w = c.words;
+  const d = v => (v === "" || v == null) ? "—" : v;
+  $("#detail").innerHTML = `
+    <div class="claimhead"><span class="big">${(c.score*100).toFixed(1)}% dispute risk</span>
+      <span class="muted">percentile ${(+c.rank_pct).toFixed(0)} · typical lead ≈ ${d(c.lead_days_est)} days</span>
+      ${c.flagged ? '<span class="tag flag">Top 10%</span>' : ""}</div>
+    <div class="chips">${[c.top1, c.top2, c.top3].filter(Boolean).map(t => `<span class="chip">${esc(t)}</span>`).join("")}</div>
+    <h3>Submitter <span class="tag syn">Synthetic demo profile</span></h3>
+    <dl><dt>Name</dt><dd>${esc(s.name)}</dd><dt>Age band</dt><dd>${esc(s.age_band)}</dd><dt>Occupation</dt><dd>${esc(s.occupation)}</dd>
+      <dt>Preferred language</dt><dd>${s.language === "es" ? "Spanish" : "English"}</dd><dt>Contact preference</dt><dd>${esc(s.contact)}</dd></dl>
+    <h3>Background</h3>
+    <dl><dt>Employer industry</dt><dd>${esc(w.industry)}</dd><dt>County</dt><dd>${esc(d(c.county))}</dd><dt>Carrier type</dt><dd>${esc(d(c.carrier_type))}</dd>
+      <dt>Accident to filing</dt><dd>${c.days_accident_to_assembly === "" ? "—" : Math.round(+c.days_accident_to_assembly) + " days"}</dd>
+      <dt>Prior claims</dt><dd>${esc(s.prior_claims)}</dd></dl>
+    <h3>Claim submission</h3>
+    <dl><dt>Nature of injury</dt><dd>${esc(w.nature)}</dd><dt>Body part</dt><dd>${esc(w.body_part)}</dd><dt>Cause</dt><dd>${esc(w.cause)}</dd>
+      <dt>Accident date</dt><dd>${d(w.accident_date)}</dd><dt>Assembly date</dt><dd>${esc(c.assembly_date)}</dd><dt>Claim ID</dt><dd>${esc(c.claim_id)}</dd></dl>
+    <div class="evidence ${s.fall_video ? "has" : ""}">Evidence · ${s.fall_video
+      ? "<b>Fall video analyzed:</b> fall from standing, sideways landing, 0.6 s descent <span class='muted'>(separate fall-detection model, demo placeholder)</span>"
+      : "Fall video: not submitted"}</div>`;
+  showLetter();
+  if (!state.letters[key()]) draft();
+}
+function key() { return state.sel + ":" + state.lang; }
+function setLang(l, quiet) {
+  state.lang = l;
+  document.querySelectorAll("[data-lang]").forEach(b => b.setAttribute("aria-pressed", b.dataset.lang === l));
+  if (!quiet && state.sel) { showLetter(); if (!state.letters[key()]) draft(); }
+}
+document.querySelectorAll("[data-lang]").forEach(b => b.onclick = () => setLang(b.dataset.lang));
+
+/* ---------- letter ---------- */
+function showLetter() {
+  const k = key(), t = $("#lt");
+  t.value = state.letters[k] || "";
+  t.classList.remove("caret");
+  renderCheck(state.checks[k]);
+  $("#reviewed").checked = !!state.reviewed[k];
+  updateButtons();
+}
+function renderCheck(c) {
+  const el = $("#check");
+  if (!c) { el.className = "check wait"; el.textContent = state.letters[key()] ? "Checking…" : "No draft yet."; return; }
+  if (c.error) { el.className = "check fail"; el.textContent = c.error; return; }
+  el.className = "check " + (c.ok ? "pass" : "fail");
+  el.innerHTML = c.ok ? "Post-check passed: neutral, plain language, no dispute wording."
+    : `Post-check failed. Fix before approval:<ul>${c.problems.map(p => `<li>${esc(p)}</li>`).join("")}</ul>`;
+}
+function updateButtons() {
+  const id = state.sel, k = key(), streaming = state.abort && state.abort.key === k;
+  $("#draft").disabled = !id || streaming;
+  $("#draft").textContent = streaming ? "Drafting…" : state.letters[k] ? "Redraft letter" : "Draft letter";
+  $("#hold").disabled = !id;
+  $("#reviewed").disabled = !state.letters[k] || streaming;
+  const ok = state.checks[k]?.ok;
+  $("#approve").disabled = !id || !state.reviewed[k] || !ok;
+  $("#hint").textContent = !id ? "" : state.decisions[id] === "approved" ? "Approved and queued for mail (client-side only)."
+    : state.decisions[id] === "held" ? "On hold." : !state.letters[k] ? "" : !ok ? "Approval needs a passing post-check." : !state.reviewed[k] ? "Tick 'Reviewed by advocate' to enable approval." : "";
+  $("#dstatus").textContent = id ? `#${id}` : "";
+}
+async function draft() {
+  const id = state.sel, lang = state.lang, k = key(), t = $("#lt");
+  if (state.abort) state.abort.abort();
+  const ac = new AbortController(); ac.key = k; state.abort = ac;
+  state.letters[k] = ""; state.checks[k] = null; state.reviewed[k] = false;
+  t.value = ""; t.classList.add("caret"); t.setAttribute("aria-busy", "true");
+  renderCheck(null); updateButtons();
+  let pending = "", text = "";
+  const typer = setInterval(() => {   // typing feel even when chunks arrive in bursts
+    if (!pending) return;
+    const n = Math.max(1, Math.min(4, Math.ceil(pending.length / 20)));
+    text += pending.slice(0, n); pending = pending.slice(n);
+    if (key() === k) { t.value = text; t.scrollTop = t.scrollHeight; }
+  }, 12);
+  try {
+    const r = await fetch(`/api/letter?id=${encodeURIComponent(id)}&lang=${lang}`, { signal: ac.signal });
+    if (!r.ok) { const e = await r.json().catch(() => ({})); throw new Error(e.error || `HTTP ${r.status}`); }
+    const reader = r.body.getReader(), dec = new TextDecoder();
+    for (;;) { const { value, done } = await reader.read(); if (done) break; pending += dec.decode(value, { stream: true }); }
+    while (pending) await new Promise(res => setTimeout(res, 15));
+    state.letters[k] = text;
+    const chk = await api("/api/check", { method: "POST", headers: { "Content-Type": "application/json" }, body: JSON.stringify({ id, text, lang }) });
+    state.checks[k] = chk.error ? { error: chk.error } : chk;
+  } catch (e) {
+    if (e.name !== "AbortError") { state.letters[k] = text; state.checks[k] = { error: "Letter service unavailable: " + e.message }; }
+  } finally {
+    clearInterval(typer);
+    if (state.abort === ac) state.abort = null;
+    if (key() === k) { t.classList.remove("caret"); t.setAttribute("aria-busy", "false"); showLetter(); }
+  }
+}
+$("#draft").onclick = draft;
+$("#lt").oninput = () => { state.letters[key()] = $("#lt").value; state.checks[key()] = null; state.reviewed[key()] = false; $("#reviewed").checked = false; recheck(); };
+let rt; function recheck() { clearTimeout(rt); rt = setTimeout(async () => {
+  const k = key(), id = state.sel, text = state.letters[k];
+  const chk = await api("/api/check", { method: "POST", headers: { "Content-Type": "application/json" }, body: JSON.stringify({ id, text, lang: state.lang }) });
+  if (key() === k) { state.checks[k] = chk.error ? { error: chk.error } : chk; renderCheck(state.checks[k]); updateButtons(); }
+}, 500); }
+$("#reviewed").onchange = () => { state.reviewed[key()] = $("#reviewed").checked; updateButtons(); };
+function decide(d) { state.decisions[state.sel] = d; renderQueue(); updateButtons(); }
+$("#approve").onclick = () => decide("approved");
+$("#hold").onclick = () => decide("held");
+</script>
+</body>
+</html>
