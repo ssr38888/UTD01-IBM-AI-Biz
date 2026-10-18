@@ -21,3 +21,7 @@ Granite (the letter writer, `c_product/granite.py`):
 - With neither set, a stub returns the template unchanged, so the demo never stalls.
 
 Model (2025 held-out year, 10% outreach budget): MLP recall 49.9% vs logistic baseline 43.6% vs private-carrier rule 9.7%. Validation picked the epoch; test was read once. Months 11–12 never appear in training (late-year rows are purged), so they encode as "unseen".
+
+## Claim risk model (`b_platform/claim_risk.py`, ~4 min on CPU)
+
+Gradient-boosted trees on the 8 claim fields, peer baselines (dispute rate of the claim's industry, carrier type, insurer, county, injury, body part, cause) and leak-safe public fields from `a_data/fetch_extra.py` (employer C-2 and worker C-3 forms received on or before assembly, district, fee region, COVID and ADR flags). Gender, age and ZIP stay out of the score (they add 0.1 point). Settings chosen on 2024 validation, refit on 2023+2024, 2025 test scored once: recall@10% 58.4% (95% CI 57.8–59.3%), AUC 0.868, worst decile calibration gap 0.45 points; logistic baseline 43.6%. A "scenario" variant adds SIMULATED claimant history and fall-video intensity; its 61.3% comes from those assumptions and is not a result. Decision trail: `wayfinder/claim-risk-refinement/map.md`.

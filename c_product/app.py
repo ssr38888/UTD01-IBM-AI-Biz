@@ -17,6 +17,7 @@ HERE = Path(__file__).resolve().parent
 ROOT = HERE.parent
 ARTIFACTS = ROOT / "b_platform" / "artifacts"
 SCORES = ARTIFACTS / "scores.csv"
+CLAIM_RISK = ARTIFACTS / "claim_risk.csv"
 FIXTURE = HERE / "fixtures" / "scores_sample.csv"
 
 sys.path.insert(0, str(HERE))
@@ -45,11 +46,14 @@ OCCUPATION = {"62": ["Home health aide", "Nurse", "Patient care technician"], "9
               "81": ["Mechanic", "Hairdresser"], "42": ["Forklift operator", "Sales representative"]}
 
 
-def profile(row):
-    """Deterministic synthetic submitter: the public data has no personal fields. Labeled as such in the UI."""
+def profile(row, a=None):
+    """Deterministic synthetic submitter: the public data has no personal fields. Labeled as such in the UI.
+    a: claim-risk analytics row (its prior_* and fall_video are simulated too)."""
     seed = int(hashlib.md5(str(row["claim_id"]).encode()).hexdigest(), 16)
     rng = random.Random(seed)
     ind = row.get("industry_code") or ""
+    if a:
+        prior = f"{a['prior_claims_5y']} claim{'s' * (a['prior_claims_5y'] != 1)}, {a['prior_disputes_5y']} disputed (simulated)" if a["prior_claims_5y"] else "None on file (simulated)"
     return {
         "synthetic": True,
         "name": f"{rng.choice(FIRST)} {rng.choice(LAST)}",
@@ -57,9 +61,9 @@ def profile(row):
         "occupation": rng.choice(OCCUPATION.get(ind, ["Worker"])),
         "language": rng.choice(["en", "en", "en", "es"]),
         "contact": rng.choice(["Mail", "Phone", "Text message", "Email"]),
-        "prior_claims": "None on file",
+        "prior_claims": prior if a else "None on file",
         # Teammate's fall-detection model is separate; the card is a placeholder shown for some fall claims.
-        "fall_video": row.get("cause_code") in FALL_CAUSES and seed % 3 == 0,
+        "fall_video": bool(a["fall_video"]) if a else row.get("cause_code") in FALL_CAUSES and seed % 3 == 0,
     }
 
 
@@ -98,6 +102,36 @@ def load_rows():
             d["flagged"] += row["flagged"]
     print(f"loaded {len(rows)} claims from {path}", file=sys.stderr)
     return rows, sorted(days.values(), key=lambda d: d["date"], reverse=True)
+
+
+def load_analytics():
+    """claim_risk.csv has ~270k rows; keep the raw line per id (~30 MB) and parse on request."""
+    if not CLAIM_RISK.exists():
+        return [], {}
+    with open(CLAIM_RISK, encoding="utf-8") as f:
+        header = f.readline().strip().split(",")
+        lines = {ln.split(",", 1)[0]: ln.strip() for ln in f if ln.strip()}
+    print(f"loaded claim-risk analytics for {len(lines)} claims", file=sys.stderr)
+    return header, lines
+
+
+RISK_HEADER, RISK_LINES = load_analytics()
+RISK_INT = {"prior_claims_5y", "prior_disputes_5y", "fall_video"}
+
+
+def analytics(claim_id):
+    ln = RISK_LINES.get(claim_id)
+    if ln is None:
+        return None
+    out = {}
+    for k, v in zip(RISK_HEADER, ln.split(",")):
+        if k in ("claim_id", "fall_intensity"):
+            out[k] = v
+        elif v == "":
+            out[k] = None
+        else:
+            out[k] = int(float(v)) if k in RISK_INT else float(v)
+    return out
 
 
 ROWS, DAYS = load_rows()
@@ -157,7 +191,8 @@ class Handler(BaseHTTPRequestHandler):
         elif u.path == "/api/claim":
             row = self.row_or_404(q)
             if row:
-                self.send_json({**public(row), "words": words(row), "submitter": profile(row)})
+                a = analytics(row["claim_id"])
+                self.send_json({**public(row), "words": words(row), "submitter": profile(row, a), "analytics": a})
         elif u.path == "/api/letter":
             row = self.row_or_404(q)
             if not row:
@@ -186,6 +221,13 @@ class Handler(BaseHTTPRequestHandler):
             bench = read_json(ARTIFACTS / "benchmark.json")
             if bench:
                 meta["benchmark"] = bench
+            cr = read_json(ARTIFACTS / "claim_risk_metrics.json")
+            if cr:
+                for m in cr.get("models", {}).values():   # deciles are bulky and unused by the UI
+                    for split in m.values():
+                        if isinstance(split, dict) and isinstance(split.get("calibration"), dict):
+                            split["calibration"].pop("deciles", None)
+                meta["claim_risk"] = cr
             self.send_json(meta)
         else:
             self.send_json({"error": "not found"}, 404)
