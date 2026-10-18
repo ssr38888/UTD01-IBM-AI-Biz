@@ -68,6 +68,12 @@ dt{color:var(--muted)} dd{margin:0}
 .claimhead .big{font-size:22px;font-weight:600}
 .evidence{border:1px dashed var(--line2);border-radius:4px;padding:8px 10px;margin-top:4px;font-size:13px}
 .evidence.has{border-style:solid;background:var(--warn-bg);color:var(--warn)}
+.fall{display:flex;gap:14px;align-items:flex-start;flex-wrap:wrap;margin-top:8px;color:var(--ink)}
+.fall svg{width:320px;height:180px;background:var(--bg);border:1px solid var(--line);border-radius:6px;flex:none}
+.fall .ro{display:grid;gap:5px;font-size:12px;min-width:170px;color:var(--muted)}
+.fall .ro b{color:var(--ink);font-size:15px;font-variant-numeric:tabular-nums}
+.fall .lvl{opacity:.45;transition:opacity .15s,background .15s} .fall .lvl.lit{opacity:1;background:var(--warn-bg);color:var(--warn);font-weight:600}
+.fall .cap{flex-basis:100%;font-size:12px;color:var(--muted)}
 .rng{position:relative;height:6px;background:var(--chip);border-radius:3px;margin:4px 0 6px}
 .rng i{position:absolute;top:0;height:100%;background:color-mix(in srgb,var(--accent) 35%,transparent);border-radius:3px}
 .rng b{position:absolute;top:-3px;width:2px;height:12px;background:var(--accent);margin-left:-1px}
@@ -264,9 +270,10 @@ async function select(id) {
     <h3>Claim submission</h3>
     <dl><dt>Nature of injury</dt><dd>${esc(w.nature)}</dd><dt>Body part</dt><dd>${esc(w.body_part)}</dd><dt>Cause</dt><dd>${esc(w.cause)}</dd>
       <dt>Accident date</dt><dd>${d(w.accident_date)}</dd><dt>Assembly date</dt><dd>${esc(c.assembly_date)}</dd><dt>Claim ID</dt><dd>${esc(c.claim_id)}</dd></dl>
-    ${c.analytics ? "" : `<div class="evidence ${s.fall_video ? "has" : ""}">Evidence · ${s.fall_video
+    ${c.analytics ? "" : evidenceHtml({ fall_video: s.fall_video, fall_intensity: "medium", descent_ms: 600 }, "Evidence · " + (s.fall_video
       ? "<b>Fall video analyzed:</b> fall from standing, sideways landing, 0.6 s descent <span class='muted'>(separate fall-detection model, demo placeholder)</span>"
-      : "Fall video: not submitted"}</div>`}`;
+      : "Fall video: not submitted"))}`;
+  mountFall();
   showLetter();
   if (!state.letters[key()]) draft();
 }
@@ -293,9 +300,85 @@ function analyticsHtml(a, w, c) {
     <h3>Claimant history ${sim}</h3>
     <dl><dt>Prior claims (5y)</dt><dd>${a.prior_claims_5y}</dd><dt>Prior disputes (5y)</dt><dd>${a.prior_disputes_5y}</dd></dl>
     <h3>Fall video evidence ${sim}</h3>
-    <div class="evidence ${a.fall_video ? "has" : ""}">${a.fall_video
+    ${evidenceHtml(a, a.fall_video
       ? `<b>Fall video analyzed:</b> ${esc(a.fall_intensity)} intensity${a.descent_ms != null ? `, ${(a.descent_ms/1000).toFixed(1)} s descent` : ""}`
-      : "No video submitted"}</div>`;
+      : "No video submitted")}`;
+}
+
+/* ---------- fall animation (pose-model illustration) ---------- */
+const FALL_MS = { low: 1200, medium: 900, high: 600 };
+const HIP_R = 45, BODY_H = 122;   // px: hip radius around the feet pivot, foot-to-crown height
+function evidenceHtml(a, text) {
+  return `<div class="evidence ${a.fall_video ? "has" : ""}">${text}${a.fall_video ? fallBlock(a, "")
+    : ' <button class="btn" type="button" data-p="demo">Show fall demo</button>'}</div>`;
+}
+function fallSvg() {
+  const J = [[110,45],[110,72],[128,94],[110,105],[110,128],[110,150]];   // head, shoulder, hand, hip, knee, foot
+  return `<svg viewBox="0 0 320 180" role="img" aria-label="Cartoon figure tipping from standing to lying on the floor, with pose skeleton overlay">
+    <line x1="20" y1="150" x2="300" y2="150" stroke="var(--line2)" stroke-width="3" stroke-linecap="round"/>
+    <line x1="110" y1="36" x2="110" y2="150" stroke="var(--muted)" stroke-width="1.5" stroke-dasharray="4 4"/>
+    <path data-p="arc" d="" fill="none" stroke="var(--accent)" stroke-width="2"/>
+    <text data-p="ang" x="122" y="106" font-size="12" font-weight="600" fill="var(--accent)">0°</text>
+    <g data-p="fig" stroke-linecap="round" stroke-linejoin="round">
+      <line x1="110" y1="105" x2="110" y2="150" stroke="var(--accent)" stroke-width="12"/>
+      <line x1="110" y1="72" x2="110" y2="105" stroke="var(--accent)" stroke-width="26"/>
+      <line x1="110" y1="72" x2="128" y2="94" stroke="var(--accent)" stroke-width="10"/>
+      <circle cx="110" cy="45" r="18" fill="var(--accent)"/>
+      <circle cx="105" cy="42" r="2.5" fill="var(--accent-ink)"/><circle cx="115" cy="42" r="2.5" fill="var(--accent-ink)"/>
+      <path d="M105 50q5 4 10 0" stroke="var(--accent-ink)" stroke-width="2" fill="none"/>
+      <g fill="var(--panel)" stroke="var(--flag)" stroke-width="2">
+        <polyline points="${[0,1,3,4,5].map(i => J[i].join(",")).join(" ")}" fill="none"/><line x1="110" y1="72" x2="128" y2="94"/>
+        ${J.map(([x, y]) => `<circle cx="${x}" cy="${y}" r="4"/>`).join("")}
+      </g>
+    </g>
+    <g data-p="puff" opacity="0" stroke="var(--warn)" stroke-width="3" stroke-linecap="round" fill="var(--warn)">
+      ${[0,1,2,3,4,5].map(i => { const t = -Math.PI * (0.08 + 0.84 * i / 5), c = Math.cos(t), s = Math.sin(t);
+        return `<line x1="${215+12*c}" y1="${150+12*s}" x2="${215+24*c}" y2="${150+24*s}"/><circle cx="${215+32*c}" cy="${150+32*s}" r="2.5" stroke="none"/>`; }).join("")}
+    </g></svg>`;
+}
+function fallBlock(a, label) {
+  const ms = a.descent_ms || FALL_MS[a.fall_intensity] || 900, rm = matchMedia("(prefers-reduced-motion: reduce)").matches;
+  const spd = (Math.PI / 2 * HIP_R / BODY_H / (ms / 1000)).toFixed(2);
+  return `<div class="fall" data-fall="${ms}" data-rm="${rm}">${fallSvg()}${rm ? fallSvg() : ""}
+    <div class="ro">${label ? `<span><span class="tag syn">${label}</span></span>` : ""}
+      <span>Torso angle <b data-p="roAng">${rm ? "0°→90°" : "0°"}</b></span>
+      <span>Descent <b>${(ms / 1000).toFixed(1)} s</b></span>
+      <span>Hip speed <b data-p="roSpd">${rm ? spd : "—"}</b> body-heights/s</span>
+      <span>Intensity <span class="chip lvl${rm ? " lit" : ""}" data-p="lvl">${esc(a.fall_intensity || "medium")}</span></span>
+      ${rm ? "" : '<span><button class="btn" type="button" data-p="replay">Replay</button></span>'}</div>
+    <div class="cap">Pose model reads how fast the body goes from upright to flat. Describes the fall; it is not an injury measure.</div></div>`;
+}
+function setPose(svg, deg, sq) {
+  const q = s => svg.querySelector(`[data-p="${s}"]`), r = deg * Math.PI / 180;
+  q("fig").setAttribute("transform", `rotate(${deg} 110 150) translate(110 150) scale(${1 + 0.15 * sq} ${1 - 0.15 * sq}) translate(-110 -150)`);
+  q("arc").setAttribute("d", deg < 1 ? "" : `M110 110A40 40 0 0 1 ${110 + 40 * Math.sin(r)} ${150 - 40 * Math.cos(r)}`);
+  q("ang").textContent = Math.round(deg) + "°";
+}
+function mountFall() {
+  if (state.fallStop) { state.fallStop(); state.fallStop = null; }
+  const demo = $("#detail [data-p=demo]");
+  if (demo) demo.onclick = () => { demo.closest(".evidence").outerHTML = `<div class="evidence">${fallBlock({ fall_intensity: "medium" }, "Example")}</div>`; mountFall(); };
+  const el = $("#detail .fall"); if (!el) return;
+  const ms = +el.dataset.fall, svgs = el.querySelectorAll("svg"), q = s => el.querySelector(`[data-p="${s}"]`);
+  if (el.dataset.rm === "true") { setPose(svgs[0], 0, 0); setPose(svgs[1], 90, 0); return; }
+  const STAND = 600, PUFF = 400, HOLD = 1500;
+  let raf, t0 = performance.now();
+  const frame = now => {
+    const t = now - t0, landed = t >= STAND + ms, u = (t - STAND - ms) / PUFF;
+    const p = Math.max(0, Math.min(1, (t - STAND) / ms)), deg = 90 * p * p;   // ease-in: a fall accelerates
+    setPose(svgs[0], deg, landed && u < 1 ? Math.sin(u * Math.PI) : 0);
+    q("puff").setAttribute("opacity", landed && u < 1 ? 1 - u : 0);
+    q("puff").setAttribute("transform", `translate(215 150) scale(${0.6 + 0.6 * Math.min(1, Math.max(0, u))}) translate(-215 -150)`);
+    q("roAng").textContent = Math.round(deg) + "°";
+    const s = Math.min(Math.max(t - STAND, 0), ms) / 1000;
+    q("roSpd").textContent = s > 0.05 ? (deg * Math.PI / 180 * HIP_R / BODY_H / s).toFixed(2) : "—";
+    q("lvl").classList.toggle("lit", landed);
+    if (t > STAND + ms + HOLD) t0 = now;
+    raf = requestAnimationFrame(frame);
+  };
+  raf = requestAnimationFrame(frame);
+  state.fallStop = () => cancelAnimationFrame(raf);
+  q("replay").onclick = () => { t0 = performance.now(); };
 }
 function key() { return state.sel + ":" + state.lang; }
 function setLang(l, quiet) {
