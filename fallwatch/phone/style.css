@@ -68,3 +68,19 @@ button:disabled { opacity: 0.45; cursor: not-allowed; }
 .stage { max-height: calc(100dvh - 175px); }
 @media (max-width: 600px) { .stage { min-height: calc(100dvh - 185px); max-height: calc(100dvh - 175px); } }
 @media (orientation: landscape) and (max-height: 600px) { .stage { min-height: 0; height: calc(100dvh - 165px); } }
+
+#setup { max-width:360px; margin:16px auto; gap:10px; }
+#setup h1 { font-size:22px; }
+#setup .lede { font-size:14px; }
+#setup .msg:empty { display:none; }
+#startBtn { justify-self:center; min-width:140px; padding:10px 24px; }
+
+#live { max-width:1100px; }
+#live:not([hidden]) .stage { animation:camera-reveal 550ms ease-out; }
+@keyframes camera-reveal { from { opacity:0; transform:translateY(8px); } to { opacity:1; transform:translateY(0); } }
+@media(prefers-reduced-motion:reduce) { #live:not([hidden]) .stage { animation:none; } }
+
+.embedded-camera .stage { height:auto; min-height:0; max-height:none; }
+
+.monitor-bar { position:sticky; top:0; z-index:10; padding:8px 0; background:var(--bg); }
+#stopBtn { flex-shrink:0; border-color:var(--bad); background:#442026; color:#ffb9b5; }

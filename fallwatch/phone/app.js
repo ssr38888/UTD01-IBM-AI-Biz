@@ -1,17 +1,23 @@
 // FallWatch phone page: camera -> pose (on the phone) -> fall detector -> evidence upload.
-import { FallDetector, POSTURE, CAMERA_DETECTION_OPTIONS, classifyPosture } from "./detector.js?v=8";
+import { FallDetector, POSTURE, CAMERA_DETECTION_OPTIONS, classifyPosture } from "./detector.js?v=30";
 import { FrameBuffer, KeypointLog, selectEventFrames, compactLandmarks } from "./evidence.js?v=4";
 
 // Pinned MediaPipe build + pose model. To run without internet access to these
 // CDNs, run deploy/vendor-mediapipe.sh and change these to "./vendor/...".
 const MP_BUNDLE = "https://cdn.jsdelivr.net/npm/@mediapipe/tasks-vision@0.10.14/vision_bundle.mjs";
 const MP_WASM = "https://cdn.jsdelivr.net/npm/@mediapipe/tasks-vision@0.10.14/wasm";
-const POSE_MODEL = "https://storage.googleapis.com/mediapipe-models/pose_landmarker/pose_landmarker_lite/float16/1/pose_landmarker_lite.task";
+const POSE_MODEL = "https://storage.googleapis.com/mediapipe-models/pose_landmarker/pose_landmarker_full/float16/1/pose_landmarker_full.task";
 
 const ANALYZE_EVERY_MS = 100;   // frequent checks for the 0.3-second horizontal trigger
-const APP_VERSION = "fallwatch-capture/0.8";
+const APP_VERSION = "fallwatch-capture/0.11";
 
 const $ = (id) => document.getElementById(id);
+let lastSavedReceipt = null;
+window.addEventListener('message', event => {
+  if (event.origin !== location.origin || event.source !== window.parent ||
+      event.data?.type !== 'fallwatch:ledger-updated' || event.data.eventId !== lastSavedReceipt?.id) return;
+  setMsg('liveMsg', `Event #${lastSavedReceipt.seq} saved and visible in the ledger.`);
+});
 const store = {
   get: (k, d = "") => { try { return localStorage.getItem(k) ?? d; } catch { return d; } },
   set: (k, v) => { try { localStorage.setItem(k, v); } catch { /* private mode */ } },
@@ -19,21 +25,27 @@ const store = {
 };
 
 // ----------------------------------------------------------------- setup screen
-$("deviceId").value = store.get("fw.deviceId", `camera-${crypto.randomUUID().slice(0, 6)}`);
+const cameraDeviceId = store.get("fw.deviceId", `camera-${crypto.randomUUID().slice(0, 6)}`).trim().slice(0, 64) || `camera-${crypto.randomUUID().slice(0, 6)}`;
+store.set("fw.deviceId", cameraDeviceId);
 store.del("fw.deviceKey");
-$("cameraFacing").value = store.get("fw.camera", "environment");
-const refreshStart = () => {
-  $("startBtn").disabled = !($("consent").checked && $("deviceId").value.trim());
-};
-["consent", "deviceId"].forEach((id) => $(id).addEventListener("input", refreshStart));
-$("cameraFacing").addEventListener("change", () => {
-  if ($("cameraFacing").value === "file") $("videoFile").click();
-});
+const refreshStart = () => { $("startBtn").disabled = running; };
 $("startBtn").addEventListener("click", () => start().catch((e) => {
   console.error(e);
   setMsg("setupMsg", e.message || String(e), true);
 }));
 $("stopBtn").addEventListener("click", () => stop().catch((error) => setMsg("liveMsg", error.message, true)));
+
+$("torchBtn").addEventListener('click',async()=>{
+  const button=$("torchBtn"),track=stream?.getVideoTracks()[0];
+  const enabled=button.getAttribute('aria-pressed')!=='true';
+  button.disabled=true;
+  try {
+    await track.applyConstraints({advanced:[{torch:enabled}]});
+    button.setAttribute('aria-pressed',String(enabled));
+    button.textContent=enabled?'Torch off':'Torch on';
+  } catch { setMsg('liveMsg','Torch could not be changed on this camera.',true); }
+  finally { button.disabled=false; }
+});
 
 
 function setMsg(id, text, err = false) {
@@ -50,7 +62,7 @@ let pendingEvents = [];         // confirmed falls still collecting "after" pict
 const grab = document.createElement("canvas");
 const standingCanvas = document.createElement("canvas");
 
-const deviceId = () => $("deviceId").value.trim().slice(0, 64);
+const deviceId = () => cameraDeviceId;
 const api = async (path, opts = {}) => {
   let response = await fetch(path, { ...opts, credentials: "same-origin" });
   if (response.status === 401) {
@@ -66,7 +78,6 @@ async function start() {
   $("startBtn").disabled = true;
   try {
     store.set("fw.deviceId", deviceId());
-    store.set("fw.camera", $("cameraFacing").value);
     setMsg("setupMsg", "Connecting to server…");
 
     const r = await api("/api/config");
@@ -91,24 +102,21 @@ async function start() {
 
     setMsg("setupMsg", "Starting camera…");
     const video = $("video");
-    if ($("cameraFacing").value === "file") {
-      const f = $("videoFile").files[0];
-      if (!f) throw new Error("Pick a video file first.");
-      video.src = URL.createObjectURL(f);
-      video.loop = false;
-    } else {
-      if (!navigator.mediaDevices?.getUserMedia) {
-        throw new Error("Camera needs HTTPS. Open this page over https://");
-      }
-      stream = await navigator.mediaDevices.getUserMedia({
-        video: { facingMode: $("cameraFacing").value, width: { ideal: 1280 }, height: { ideal: 720 } },
-        audio: false,
-      });
-      video.srcObject = stream;
+    if (!navigator.mediaDevices?.getUserMedia) {
+      throw new Error("Camera needs HTTPS. Open this page over https://");
     }
+    stream = await navigator.mediaDevices.getUserMedia({
+      video: { facingMode: { ideal: "environment" }, width: { ideal: 1280 }, height: { ideal: 720 } },
+      audio: false,
+    });
+    video.srcObject = stream;
+    const cameraTrack = stream.getVideoTracks()[0];
+    $("torchBtn").hidden = !cameraTrack?.getCapabilities?.().torch;
+    $("torchBtn").setAttribute('aria-pressed','false');
+    $("torchBtn").textContent = 'Torch on';
     await video.play();
 
-    detector = new FallDetector(CAMERA_DETECTION_OPTIONS);
+    detector = new FallDetector({...CAMERA_DETECTION_OPTIONS, otherConfirmsFall:true});
     lastSnapT = 0; lastStandingSnap = null; prevPosture = null; prevPhase = "watching";
     standingCanvas.dataset.t = "";
     const stage = document.querySelector(".stage");
@@ -154,6 +162,7 @@ async function stop() {
   $("setup").hidden = false;
   discardBuffer();
   $("stopBtn").disabled = false;
+  refreshStart();
 }
 
 function discardBuffer() {
@@ -197,8 +206,8 @@ async function tickInner() {
   let lms = res.landmarks?.[0] || null;
   const aspect = video.videoWidth / video.videoHeight || 4 / 3;
   const potential = classifyPosture(lms, aspect, detector.o);
-  if (!detector.active && potential.posture === POSTURE.LYING &&
-      (detector.candidate || detector.lastStand && now - detector.lastStand.t <= detector.o.fallWindowMs)) {
+  if (!detector.active && (potential.posture === POSTURE.OTHER || potential.posture === POSTURE.LYING &&
+      (detector.candidate || detector.lastStand && now - detector.lastStand.t <= detector.o.fallWindowMs))) {
     const fresh = presenceLandmarker.detect(video);
     lms = fresh.landmarks?.[0] || null;
     // A miss cannot confirm a fall. Keep the detector's short dropout grace
@@ -207,6 +216,7 @@ async function tickInner() {
   const r = detector.update(now, lms, aspect);
 
   kplog.add({ t: now, p: r.posture, a: round1(r.metrics.torsoDeg), h: round3(r.metrics.hipY),
+              ba: round1(r.metrics.bodyAxisDeg), hb: r.metrics.horizontalBasis,
               k: compactLandmarks(lms) });
 
   // Keep an un-encoded copy of the latest standing view (cheap): becomes key frame 1.
@@ -221,7 +231,7 @@ async function tickInner() {
   }
 
   // First lying frame of a possible fall: take key frame 2 immediately.
-  if (r.posture === POSTURE.LYING && prevPosture !== POSTURE.LYING) {
+  if (r.event || r.posture === POSTURE.LYING && prevPosture !== POSTURE.LYING) {
     await snap(now, ["lieKey"]);
   }
 
@@ -316,11 +326,15 @@ async function flushQueue() {
       try { r = await api("/api/events", { method: "POST", body: fd }); }
       catch { throw new Error("offline"); }
       if (r.ok) {
-        await r.json();
+        const receipt = await r.json();
+        if (typeof receipt.id !== 'string' || !Number.isInteger(receipt.seq)) throw new Error('invalid save receipt');
         await queue.del(item.id);
+        lastSavedReceipt = receipt;
         lastSavedEventT = item.meta.detected_at_ms;
-        setMsg("liveMsg", "Event saved. Open Logs to review the evidence.");
-        window.dispatchEvent(new CustomEvent("fallwatch:event-saved"));
+        setMsg("liveMsg", `Event #${receipt.seq} saved. ${window.parent !== window ? 'Syncing ledger…' : 'Open Logs to review the evidence.'}`);
+        const savedMessage = {type:"fallwatch:event-saved", eventId:receipt.id, seq:receipt.seq};
+        window.dispatchEvent(new CustomEvent("fallwatch:event-saved", {detail:savedMessage}));
+        if (window.parent !== window) window.parent.postMessage(savedMessage,location.origin);
         backoffMs = 2000;
         setBanner("sent", "Event saved");
         setTimeout(() => setBanner(prevPhase, null), 6000);

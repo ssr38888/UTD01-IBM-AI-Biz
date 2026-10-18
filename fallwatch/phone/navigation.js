@@ -1,4 +1,8 @@
 const toggle = document.getElementById("menuToggle");
+if (new URLSearchParams(location.search).get('embedded') === '1') {
+  document.body.classList.add('embedded-camera');
+  document.querySelector('.sitebar').hidden = true;
+}
 const menu = document.getElementById("appMenu");
 const closeMenu = () => { menu.hidden = true; toggle.setAttribute("aria-expanded", "false"); };
 toggle.addEventListener("click", () => {
@@ -43,4 +47,10 @@ if (cameraView) {
   navigate(location.hash === "#logs" ? "logs" : "camera");
 } else if (new URLSearchParams(location.search).get("embedded") === "1") {
   document.querySelector(".sitebar").hidden = true;
+}
+
+if (new URLSearchParams(location.search).get('embedded') === '1') {
+  const reportHeight = () => window.parent.postMessage({type:'fallwatch:camera-height',height:Math.ceil(document.body.getBoundingClientRect().height)+32},location.origin);
+  new ResizeObserver(reportHeight).observe(document.body);
+  reportHeight();
 }

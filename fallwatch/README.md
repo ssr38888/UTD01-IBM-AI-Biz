@@ -169,3 +169,64 @@ New events contain JPEG photos and small pose/manifest metadata, with five secon
 ### Fresh person check before a fall event
 
 Before a tracked horizontal pose can become an event, the camera rechecks that frame with independent IMAGE-mode pose detection. This avoids carrying a tracked skeleton into an empty room when a person exits. A failed fresh check cannot confirm an event. A short missed frame uses the existing dropout grace; persistent absence expires the standing/fall transition. JPEG-only evidence, timing, and existing history are unchanged.
+
+### Automatic dispute scores
+
+Logs shows scores automatically for each selected incident. There is no employee form and no invented claim profile. The baseline is the historical recorded-dispute rate in the 2023 training split: 11,470 / 206,460 = 5.56%. It is a population rate, not an employee-specific prediction or denial probability.
+
+Build the baseline artifact with `python scripts/build_population_baseline.py PATH/TO/train.csv.gz data/claimclock/population_baseline.json`. The source must be ClaimClock's training split, never validation/test labels. The artifact contains counts and a source SHA-256; `CLAIMCLOCK_POPULATION_PATH` can override its location. The automatic endpoint is `GET /api/events/{event_id}/dispute-score`, protected by the existing browser session or viewer key.
+
+The second value is labeled **Evidence-adjusted estimate / Assumption-based**. Intensity is estimated from the verified descriptor and hashed pose log using actual elapsed timestamps and normalized hip descent. It is image-plane motion intensity, not injury severity, impact force, or a medically validated danger category. Sparse sampling does not imply a high-intensity fall.
+
+The versioned `pose_descent_v2` policy requires intact evidence, standing/floor key photos, a hashed pose log, at least three visible observations covering half of the recorded poses, visible standing-to-lying boundaries, no visible-pose gaps over 500 ms or 75% of the descent, and consistent finite drop/speed/duration. Duration must be 100–2000 ms and drop 0.15–2 body heights. Unreliable observations show **Insufficient visibility**. The estimate card displays the unchanged historical baseline with **No adjustment applied**; the API keeps `adjusted_probability: null` to distinguish this fallback from an actual adjustment.
+
+Heuristic bands and unvalidated relative dispute-rate reductions:
+- High: at least 1 body height/sec; assumed reduction 35%.
+- Medium: at least 0.4 body heights/sec; assumed reduction 25%.
+- Low: other measurable transitions; assumed reduction 10%.
+
+Adjusted estimate = historical baseline × (1 − assumed reduction). The thresholds and reductions are explicit policy assumptions, not learned from dispute outcomes. Integrity verifies stored bytes, not claim truth or causality. Automatic scores use the current baseline artifact and incident evidence; no employee input or assessment writes are required. Older incidents lacking sufficient pose coverage remain unclassified. Camera detection and capture behavior are unchanged.
+
+The original trained tabular model and optional claim-link API remain available for future use with actual claim metadata. Automatic Logs scores do not use those saved assessments. Immutable event evidence remains unchanged.
+
+Run `python -m pytest backend/tests`. With the population artifact installed, `python tests/claim_integration.py` checks automatic scores, no form, reload, incident switching, and mobile layout using an isolated database and synthetic evidence.
+
+Brief occlusions no longer suppress measurable transitions: partially visible falls are labeled Estimated with limited visibility. Speed is normalized hip descent divided by actual elapsed descent time. Continuous coverage uses all poses with gaps at most 250 ms; partial coverage is explicitly marked.
+
+### Uploaded frontend, live integration
+
+The supplied `fallwatch-frontend.zip` design is integrated under `frontend/`. The app root now redirects to `/frontend/`. Its design stylesheet is retained as `frontend/theme.css`; `live.css` adapts it for actual camera controls, a persistent event ledger, authenticated photo loading, and phone navigation. The supplied simulator, fake scenarios, sample ledger, and record-tampering action are not part of the live app.
+
+`frontend/live-app.js` uses the existing same-origin session and backend history, daily summary, event, file, integrity, and dispute-score endpoints. Scoring continues to use the shared viewer module and the backend intensity policy; it is not recalculated using the uploaded simulation's JavaScript. No employee claim form or API key entry is required. Historic videos remain stored, but the new evidence view displays photos.
+
+The existing capture engine is embedded at `/capture/?embedded=1` with same-origin-only framing and camera permission delegation. Regular `/capture/` retains its framing restriction. Detection stays in the capture page; a saved-event notification refreshes the parent ledger and scores. Root frontend scripts and styles are external files, preserving the Content Security Policy; system fallback fonts avoid requiring external font services. The Docker image now includes `frontend/`.
+
+Verification: `node --test tests/*.test.mjs`, `python -m pytest backend/tests`, `E2E_FRONTEND=1 python tests/claim_integration.py`, and `python tests/frontend_camera_e2e.py`. Browser tests use isolated databases and synthetic camera input, checking actual capture, photos-only upload, live ledger refresh, evidence integrity, scoring, event selection, reload, and mobile layout.
+
+
+### Photo-only evidence path
+
+Automatic scoring distinguishes measured-motion evidence from photo-only evidence. If saved photos pass integrity verification but a descent cannot be measured, the UI shows **Photo evidence available** and **Assumption-based · photo evidence only**. The backend retains the unavailable intensity state instead of inventing a motion level. A separate, unvalidated 10% relative photo-presence adjustment is applied (`score_basis: verified_photos_policy`), giving 5.00% from the current 5.56% population baseline. Measurable falls retain the high/medium/low policy. Photos failing integrity verification receive no adjustment. Photo integrity is not proof of fall severity, claim truth, or a demonstrated reduction in disputes.
+
+
+### Assumed reduction ranges (version 21)
+
+All automatic evidence-adjusted estimates now use scenario intervals: photo-only / low intensity 0–10%, medium 10–25%, high 25–35% relative reduction. The endpoint returns `assumed_relative_reduction_range` and `adjusted_probability_range`, and no exact adjusted probability or reduction point. Probability bounds are baseline × (1 − upper reduction) through baseline × (1 − lower reduction). These are configurable assumption boundaries, not learned uncertainty estimates, statistical confidence intervals, or randomized per-event predictions. Charts shade the interval, and the numeric risk index and probability display both bounds. Evidence failing verification receives no adjustment.
+
+### Perspective-tolerant horizontal posture (version 23)
+
+The camera can corroborate a tilted torso with the visible whole-body axis. The original 60-degree torso rule remains. A second camera-only path accepts torso angle at least 45 degrees when shoulder-to-ankle and hip-to-ankle axes are each at least 60 degrees from vertical, the visible body box is wider than tall, and the hip-to-ankle length is at least 0.8 torso lengths. Shoulder and ankle vectors from the hip must point in opposing directions to exclude seated forward folds. It requires visible ankles and does not infer floor contact or injury from geometry alone.
+
+This addresses a projected lying pose previously classified Other at roughly 50 degrees of torso tilt. It does not relax person visibility or the independent IMAGE-mode person check. Steady standing, descent timing/drop, confirmation, and one-event-per-fall behavior remain. Pose logs include body-axis angle (`ba`) and horizontal criterion (`hb`, torso or whole_body) for diagnosis. Tests cover perspective in square/wide frames, bent/upright-leg negatives, startup lying, and a full captured tilted-pose event reaching an existing ledger.
+
+### Direct camera controls and Full pose model (version 24)
+
+Capture now offers Start and Stop without device-name, camera-selection, or checkbox fields. A stable browser-local device identifier is generated automatically; camera access prefers the rear camera and permits the browser to select an available camera. Browser camera permission still applies. Stop releases the stream and enables Start again.
+
+Both VIDEO tracking and independent IMAGE person verification use the official pretrained MediaPipe Pose Landmarker Full float16 v1 model instead of Lite. This is a pretrained-model upgrade, not custom training or measured lying-position accuracy. Existing posture geometry and event confirmation rules remain. A real-model browser smoke test verified loading, inference startup and stream shutdown; the synthetic tilted-pose integration test verified photo-only upload and ledger updates. Labeled representative examples are still needed to evaluate lying-position accuracy.
+
+### Direct Other-pose events and torch (version 30)
+
+At user request, live capture enables otherConfirmsFall: a person classified Other immediately confirms one suspected_fall event without a standing or lying transition. A fresh IMAGE person check remains required. Empty frames do not trigger, and standing recovery rearms detection. This intentionally includes sitting/bending poses classified Other. These events retain observedFall=false and zero unmeasured descent/speed. A confirmation photo is taken immediately.
+
+Torch on/off appears only when the video track reports torch capability. Browser tests simulated torch hardware; physical support depends on the phone camera and browser.

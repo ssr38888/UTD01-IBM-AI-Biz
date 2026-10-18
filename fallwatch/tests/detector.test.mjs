@@ -37,6 +37,54 @@ test("horizontal torso is the deciding signal even when the body box is tall", (
   assert.equal(classifyPosture(lms, 1, { horizontalTorsoOnly: true }).posture, POSTURE.LYING);
 });
 
+function tiltedLying(aspect = 1) {
+  const lms = pose('lying');
+  lms[11].y -= .185; lms[12].y -= .185;
+  for (const point of lms) point.x /= aspect;
+  return lms;
+}
+
+test('camera recognizes a floor-level body when perspective tilts the torso', () => {
+  for (const aspect of [1, 16 / 9]) {
+    const result = classifyPosture(tiltedLying(aspect), aspect, CAMERA_DETECTION_OPTIONS);
+    assert.ok(result.torsoDeg < 60);
+    assert.equal(result.posture, POSTURE.LYING);
+  }
+});
+
+test('diagonal torso alone with upright legs does not pass the whole-body check', () => {
+  const lms = pose('standing');
+  lms[11].x += .18; lms[12].x += .18;
+  lms[11].y = .40; lms[12].y = .40;
+  lms[15] = {x:.05,y:.5,visibility:.95}; lms[16] = {x:.95,y:.5,visibility:.95};
+  assert.notEqual(classifyPosture(lms, 1, CAMERA_DETECTION_OPTIONS).posture, POSTURE.LYING);
+});
+
+test('a seated forward fold is not mistaken for an extended horizontal body', () => {
+  const lms=pose('empty');
+  for(const [index,x,y] of [[0,.75,.45],[11,.69,.49],[12,.71,.51],[23,.49,.69],[24,.51,.71],
+                           [25,.72,.65],[26,.74,.67],[27,.94,.61],[28,.96,.63]]) {
+    lms[index]={x,y,visibility:.95};
+  }
+  assert.notEqual(classifyPosture(lms,1,CAMERA_DETECTION_OPTIONS).posture,POSTURE.LYING);
+  const d=new FallDetector(CAMERA_DETECTION_OPTIONS);
+  for(let t=0;t<=1000;t+=100) d.update(t,pose('standing'));
+  for(let t=1100;t<=2200;t+=100) assert.equal(d.update(t,lms).event,null);
+});
+
+test('a visible transition into tilted lying confirms once; starting lying still saves nothing', () => {
+  const detector = new FallDetector(CAMERA_DETECTION_OPTIONS);
+  for (let t=0;t<=1000;t+=100) detector.update(t,pose('standing'));
+  const events=[];
+  for(let t=1200;t<=3000;t+=100) {
+    const result=detector.update(t,tiltedLying());
+    if(result.event) events.push(result.event);
+  }
+  assert.equal(events.length,1);
+  const startup=new FallDetector(CAMERA_DETECTION_OPTIONS);
+  for(let t=0;t<=3000;t+=100) assert.equal(startup.update(t,tiltedLying()).event,null);
+});
+
 test("horizontal confirmation resets on upright or missing poses and rearms after recovery", () => {
   const opts = { horizontalConfirmMs: 300, horizontalTorsoOnly: true };
   assert.equal(run([["lying", 200], ["empty", 200], ["lying", 200], ["standing", 2000]], opts).events.length, 0);
@@ -182,3 +230,14 @@ test("two separate falls give two events", () => {
   ]);
   assert.equal(events.length, 2);
 });
+
+ test('requested Other policy confirms immediately once and ignores missing people',()=>{
+ const d=new FallDetector({...CAMERA_DETECTION_OPTIONS,otherConfirmsFall:true});
+ assert.equal(d.update(0,pose('empty')).event,null);
+ const r=d.update(100,pose('sitting'));
+ assert.equal(r.posture,POSTURE.OTHER);
+ assert.equal(r.event?.eventType,'suspected_fall');
+ assert.equal(r.event?.confirmedT,100);
+ assert.equal(r.event?.observedFall,false);
+ assert.equal(d.update(200,pose('sitting')).event,null);
+ });

@@ -1,0 +1,8 @@
+{
+  "probability": 0.05555555555555555,
+  "training_claims": 206460,
+  "recorded_disputes": 11470,
+  "period": "2023",
+  "source_sha256": "b87b3cf78bcc2fb52a2a104c7946da6788a5efde0478d30ed53c21bcbfe1718d",
+  "target": "recorded_dispute_within_90_days"
+}

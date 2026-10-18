@@ -12,6 +12,7 @@ RUN pip install --no-cache-dir -r backend/requirements.txt
 COPY backend backend
 COPY phone phone
 COPY viewer viewer
+COPY frontend frontend
 
 RUN useradd --system --uid 10001 fallwatch && mkdir -p data && chown fallwatch data
 USER fallwatch

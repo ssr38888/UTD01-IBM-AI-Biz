@@ -58,6 +58,13 @@ class Image(Base):
     event: Mapped[Event] = relationship(back_populates="images")
 
 
+class ClaimAssessment(Base):
+    """Claim linkage is separate from immutable incident evidence."""
+    __tablename__ = "claim_assessments"
+    event_id: Mapped[str] = mapped_column(ForeignKey("events.id"), primary_key=True)
+    assessment_json: Mapped[str] = mapped_column(Text)
+
+
 class Snapshot(Base):
     """Optional low-rate heartbeat pictures (only when HEARTBEAT_SEC > 0)."""
     __tablename__ = "snapshots"

@@ -62,6 +62,127 @@ def post(client, meta, files, headers=D):
     return client.post("/api/events", data={"meta": json.dumps(meta)}, files=files, headers=headers)
 
 
+def test_automatic_population_score_requires_no_claim_inputs(client, monkeypatch):
+    from app import claimclock
+    monkeypatch.setattr(claimclock, "population_baseline", lambda: {
+        "probability": .06, "training_claims": 1000, "recorded_disputes": 60,
+        "source_sha256": "test-training-sha", "period": "2023"})
+    meta, files = make_event()
+    start = meta["descriptor"]["standT"]
+    rows = [{"t": start + i * 100, "h": .4 + i * .03,
+             "p": "standing" if i == 0 else "lying" if i == 10 else "other",
+             "k": [[.5, .5, .9] for _ in range(9)]} for i in range(11)]
+    files[-1] = ("keypoints", ("keypoints.json", json.dumps(rows).encode(), "application/json"))
+    event_id = post(client, meta, files).json()["id"]
+    path = f"/api/events/{event_id}/dispute-score"
+    assert client.get(path).status_code == 401
+    result = client.get(path, headers=V)
+    assert result.status_code == 200, result.text
+    score = result.json()
+    assert score["baseline_probability"] == .06
+    assert score["adjusted_probability"] is None
+    assert score["adjusted_probability_range"] == {"min": .06 * .75, "max": .06 * .9}
+    assert score["assumed_relative_reduction_range"] == {"min": .10, "max": .25}
+    assert score["baseline_basis"] == "historical_population_rate"
+    assert score["adjustment_basis"] == "assumption_based"
+    assert score["intensity"]["level"] == "medium"
+    assert "inputs" not in score
+    assert client.get(path, headers=V).json()["baseline_probability"] == .06
+    other = post(client, *make_event(n=1)).json()["id"]
+    photo_score = client.get(f"/api/events/{other}/dispute-score", headers=V).json()
+    assert photo_score["adjusted_probability"] is None
+    assert photo_score["adjusted_probability_range"] == {"min": .06 * .9, "max": .06}
+    assert photo_score["assumed_relative_reduction"] is None
+    assert photo_score["assumed_relative_reduction_range"] == {"min": 0, "max": .10}
+    assert photo_score["score_basis"] == "verified_photos_policy"
+    assert photo_score["intensity"]["level"] == "insufficient_visibility"
+    manifest = TMP / 'objects' / 'events' / other / 'manifest.json'
+    original = manifest.read_bytes()
+    try:
+        manifest.write_bytes(b'broken')
+        failed = client.get(f"/api/events/{other}/dispute-score", headers=V).json()
+        assert failed["adjusted_probability"] is None
+        assert failed["score_basis"] == "no_verified_evidence"
+    finally:
+        manifest.write_bytes(original)
+    assert client.get("/api/events/missing/dispute-score", headers=V).status_code == 404
+
+
+@pytest.mark.parametrize("level,point,bounds", [("low",.10,(0,.10)), ("medium",.25,(.10,.25)), ("high",.35,(.25,.35))])
+def test_all_motion_levels_return_ranges_without_exact_estimates(client,monkeypatch,level,point,bounds):
+    from app import claimclock
+    original = claimclock.classify_intensity
+    monkeypatch.setattr(claimclock,'population_baseline',lambda:{'probability':.06})
+    monkeypatch.setattr(claimclock,'classify_intensity',lambda descriptor,rows:
+                        {'level':level,'assumed_relative_reduction':point} if descriptor else original(None,None))
+    event_id = post(client,*make_event()).json()['id']
+    score = client.get(f'/api/events/{event_id}/dispute-score',headers=V).json()
+    assert score['adjusted_probability'] is None
+    assert score['assumed_relative_reduction'] is None
+    assert score['assumed_relative_reduction_range'] == {'min':bounds[0],'max':bounds[1]}
+    assert score['adjusted_probability_range'] == {'min':.06*(1-bounds[1]),'max':.06*(1-bounds[0])}
+
+
+def test_claim_assessment_is_linked_persistent_and_validated(client, monkeypatch):
+    from app import claimclock
+    monkeypatch.setattr(claimclock, "score_claim", lambda fields: (0.4, "test-model-sha"))
+    meta, files = make_event()
+    event_id = post(client, meta, files).json()["id"]
+    path = f"/api/events/{event_id}/claim"
+    fields = {"claim_reference": "TEST-CLAIM", "industry_code": "23",
+              "wcio_cause_of_injury_code": "56", "wcio_nature_of_injury_code": "49",
+              "wcio_part_of_body_code": "42", "county_of_injury": "QUEENS",
+              "carrier_type": "1A. PRIVATE", "days_accident_to_assembly": 14,
+              "assembly_month": 6}
+    assert client.get(path).status_code == 401
+    assert client.post(path, json=fields, headers=V).status_code == 403
+    headers = {**V, "Origin": "http://testserver"}
+    result = client.post(path, json=fields, headers=headers)
+    assert result.status_code == 200, result.text
+    data = result.json()
+    assert data["baseline_probability"] == 0.4
+    assert data["adjusted_probability"] == 0.4 * .75
+    assert data["adjustment_basis"] == "assumption_based"
+    assert data["evidence_verified"] is True
+    assert data["event_id"] == event_id
+    assert client.get(path, headers=V).json()["assessment"] == data
+    assert client.post(path, json={**fields, "assembly_month": 13}, headers=headers).status_code == 422
+    assert client.post(path, json={**fields, "industry_code": 23}, headers=headers).status_code == 422
+    assert client.post(path, json={**fields, "days_accident_to_assembly": -1}, headers=headers).status_code == 422
+    other = post(client, *make_event()).json()["id"]
+    assert client.get(f"/api/events/{other}/claim", headers=V).json()["assessment"] is None
+
+
+def test_claim_assessment_does_not_adjust_unverified_evidence(client, monkeypatch):
+    from app import claimclock
+    monkeypatch.setattr(claimclock, "score_claim", lambda fields: (0.4, "test-model-sha"))
+    meta, files = make_event(n=1)
+    event_id = post(client, meta, files).json()["id"]
+    fields = {"claim_reference": "NO-KEYFRAMES", "industry_code": None,
+              "wcio_cause_of_injury_code": None, "wcio_nature_of_injury_code": None,
+              "wcio_part_of_body_code": None, "county_of_injury": None,
+              "carrier_type": None, "days_accident_to_assembly": None, "assembly_month": 6}
+    result = client.post(f"/api/events/{event_id}/claim", json=fields,
+                         headers={**V, "Origin": "http://testserver"})
+    assert result.status_code == 200, result.text
+    assert result.json()["baseline_probability"] == .4
+    assert result.json()["adjusted_probability"] is None
+    # A malformed manifest still permits a baseline, but never an adjustment.
+    event_id = post(client, *make_event()).json()["id"]
+    manifest = TMP / "objects" / "events" / event_id / "manifest.json"
+    original = manifest.read_bytes()
+    try:
+        manifest.write_bytes(b"not-json")
+        result = client.post(f"/api/events/{event_id}/claim", json=fields,
+                             headers={**V, "Origin": "http://testserver"})
+        assert result.status_code == 200, result.text
+        assert result.json()["baseline_probability"] == .4
+        assert result.json()["adjusted_probability"] is None
+        assert result.json()["evidence_verified"] is False
+    finally:
+        manifest.write_bytes(original)
+
+
 def test_auth_required(client):
     meta, files = make_event()
     assert post(client, meta, files, headers={}).status_code == 401
@@ -114,7 +235,7 @@ def test_person_down_event_is_saved_and_classified_in_logs(client):
 
 
 def test_home_is_camera_and_log_summary_is_complete_and_protected(client):
-    assert client.get("/", follow_redirects=False).headers["location"] == "/capture/"
+    assert client.get("/", follow_redirects=False).headers["location"] == "/frontend/"
     assert client.get("/api/logs?start_ms=1&end_ms=1000").status_code == 401
     meta, files = make_event()
     t = meta["detected_at_ms"]
@@ -252,6 +373,21 @@ def test_security_headers_and_no_public_docs(client):
     assert camera.headers["x-frame-options"] == "DENY"
     r = client.get("/api/events", headers=V)
     assert r.headers["cache-control"] == "no-store"
+
+
+def test_live_frontend_uses_real_capture_and_restricted_assets(client):
+    page = client.get("/frontend/")
+    assert page.status_code == 200
+    assert 'href="/capture/?v=' in page.text
+    assert 'id="cameraFrame"' not in page.text
+    assert 'live-app.js' in page.text
+    assert '<script>' not in page.text
+    assert '<style>' not in page.text
+    assert 'simulateOffline' not in page.text
+    assert 'frame-ancestors \'none\'' in page.headers['content-security-policy']
+    embedded = client.get('/capture/?embedded=1')
+    assert embedded.headers['x-frame-options'] == 'SAMEORIGIN'
+    assert "frame-ancestors 'self'" in embedded.headers['content-security-policy']
 
 
 @pytest.mark.parametrize("dev,view", [

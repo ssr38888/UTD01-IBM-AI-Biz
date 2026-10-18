@@ -108,7 +108,7 @@ def main() -> int:
             page = ctx.new_page()
             logs = []
             page.on("console", lambda m: logs.append(f"{m.type}: {m.text}"))
-            page.goto(base + "/")
+            page.goto(base + "/capture/")
             assert page.url.endswith("/capture/")
             page.fill("#deviceId", "e2e-phone")
             assert page.locator("#deviceKey").count() == 0
@@ -132,8 +132,6 @@ def main() -> int:
             page.click("#menuToggle")
             page.click("[data-view='logs']")
             frame = page.frame_locator("#logsFrame")
-            frame.locator("#key").fill("e2e-viewer-key-0123456789abcdefgh")
-            frame.locator("#load").click()
             frame.locator("#eventCount").get_by_text("0", exact=True).wait_for()
             assert page.locator("#video").evaluate("video => video.srcObject.active && !video.paused"), page.locator("#video").evaluate("v => ({active:v.srcObject?.active,paused:v.paused,time:v.currentTime,ready:v.readyState})")
             # Wait for a complete automatic upload while the log covers the camera.
@@ -187,8 +185,6 @@ def main() -> int:
             v.on("pageerror", lambda e: logs.append(f"viewer error: {e}"))
             v.set_viewport_size({"width": 1280, "height": 1500})
             v.goto(base + "/viewer/")
-            v.fill("#key", "e2e-viewer-key-0123456789abcdefgh")
-            v.click("#load")
             v.wait_for_selector("#verifyBtn", timeout=10000)
             assert v.locator("#eventClip").count() == 0
             v.click("#verifyBtn")

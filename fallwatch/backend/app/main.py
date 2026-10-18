@@ -50,14 +50,16 @@ async def security_headers(request: Request, call_next):
     h["X-Content-Type-Options"] = "nosniff"
     h["Referrer-Policy"] = "no-referrer"
     # Only the same-origin log viewer can be embedded in the camera dashboard.
-    h["X-Frame-Options"] = "SAMEORIGIN" if path.startswith("/viewer/") else "DENY"
+    embedded_camera = path.startswith("/capture/") and request.query_params.get("embedded") == "1"
+    h["X-Frame-Options"] = "SAMEORIGIN" if path.startswith("/viewer/") or embedded_camera else "DENY"
     h["Permissions-Policy"] = "camera=(self), microphone=(), geolocation=()"
-    h["Content-Security-Policy"] = (_CSP_CAPTURE if path.startswith("/capture") else
+    h["Content-Security-Policy"] = (_CSP_CAPTURE.replace("frame-ancestors 'none'", "frame-ancestors 'self'") if embedded_camera else
+                                    _CSP_CAPTURE if path.startswith("/capture") else
                                     _CSP_DEFAULT.replace("frame-ancestors 'none'", "frame-ancestors 'self'")
                                     if path.startswith("/viewer/") else _CSP_DEFAULT)
     if path.startswith("/api/") and "Cache-Control" not in h:
         h["Cache-Control"] = "no-store"
-    elif path.startswith(("/capture", "/viewer")):
+    elif path.startswith(("/capture", "/viewer", "/frontend")):
         h["Cache-Control"] = "no-cache"
     return resp
 NAME_RE = re.compile(r"^[A-Za-z0-9_.-]{1,64}$")
@@ -480,14 +482,18 @@ def healthz():
 
 
 # --------------------------------------------------------------------------- pages
+from .claimclock import register_claim_routes
+
+register_claim_routes(app, viewer_auth, get_db, _same_origin, _verify, storage)
 
 @app.get("/")
 def root():
-    return RedirectResponse("/capture/")
+    return RedirectResponse("/frontend/")
 
 
 app.mount("/capture", StaticFiles(directory=config.ROOT / "phone", html=True), name="capture")
 app.mount("/viewer", StaticFiles(directory=config.ROOT / "viewer", html=True), name="viewer")
+app.mount("/frontend", StaticFiles(directory=config.ROOT / "frontend", html=True), name="frontend")
 
 
 @app.exception_handler(FileExistsError)

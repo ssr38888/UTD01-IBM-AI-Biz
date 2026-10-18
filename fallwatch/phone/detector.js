@@ -82,9 +82,21 @@ export function classifyPosture(lms, aspect = 1, opts = DEFAULTS) {
   const legRatio = ankles.length
     ? (Math.max(...ankles.map((p) => p.y)) - H.y) / torsoLen
     : null;
+  const A = ankles.length
+    ? ankles.map(sx).reduce((sum,p)=>({x:sum.x+p.x/ankles.length,y:sum.y+p.y/ankles.length}),{x:0,y:0})
+    : null;
+  const axisDeg = (from,to) => Math.atan2(Math.abs(to.x-from.x),Math.abs(to.y-from.y))*180/Math.PI;
+  const bodyAxisDeg = A ? axisDeg(S,A) : null;
+  const legAxisDeg = A ? axisDeg(H,A) : null;
+  // Perspective can tilt a prone torso even when the rest of the body is
+  // horizontal. Require visible, extended horizontal legs as corroboration.
+  const wholeBodyHorizontal = o.horizontalTorsoOnly && A && torsoDeg >= 45 &&
+    bodyAxisDeg >= 60 && legAxisDeg >= 60 && boxRatio <= 1 &&
+    (S.x-H.x)*(A.x-H.x) + (S.y-H.y)*(A.y-H.y) < 0 &&
+    Math.hypot(A.x-H.x,A.y-H.y) >= torsoLen*.8;
 
   let posture = POSTURE.OTHER;
-  if (torsoDeg >= o.lieMinTorsoDeg && (o.horizontalTorsoOnly || boxRatio <= o.lieMaxBoxRatio)) {
+  if ((torsoDeg >= o.lieMinTorsoDeg && (o.horizontalTorsoOnly || boxRatio <= o.lieMaxBoxRatio)) || wholeBodyHorizontal) {
     posture = POSTURE.LYING;
   } else if (torsoDeg <= o.standMaxTorsoDeg) {
     const legsOk = legRatio !== null ? legRatio >= o.standMinLegRatio : boxRatio >= o.standMinBoxRatio;
@@ -94,6 +106,9 @@ export function classifyPosture(lms, aspect = 1, opts = DEFAULTS) {
   return {
     posture,
     torsoDeg,
+    bodyAxisDeg,
+    legAxisDeg,
+    horizontalBasis: posture === POSTURE.LYING ? (torsoDeg >= o.lieMinTorsoDeg ? 'torso' : 'whole_body') : null,
     boxRatio,
     legRatio,
     hipY: H.y,
@@ -152,6 +167,11 @@ export class FallDetector {
       this.standSince = null;
     }
 
+    if (this.o.otherConfirmsFall && p === POSTURE.OTHER && !this.active) {
+      event = this._confirm({ standT:t, standHipY:m.hipY, standBodyH:1,
+        lieT:t, lieHipY:m.hipY, sideVotes:{left:0,right:0,unclear:1} },t,'suspected_fall');
+      return {posture:p,metrics:m,phase:'down',event,eventType:event.eventType,confirmedT:t,downForMs:null};
+    }
     if (this.o.horizontalConfirmMs > 0) return this._updateHorizontal(t, m);
 
     if (this.active) {

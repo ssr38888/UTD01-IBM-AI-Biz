@@ -1,6 +1,8 @@
 import { localDayRange, summarizeDay, formatBytes, isoTimestamp } from "./log-data.js?v=6";
+import { createClaimPanel } from "./claimclock.js?v=24";
 
 const $ = (id) => document.getElementById(id);
+const selectClaimEvent = createClaimPanel(sessionFetch);
 const esc = (value) => String(value).replace(/[&<>"']/g, (c) => ({ "&": "&amp;", "<": "&lt;", ">": "&gt;", '"': "&quot;", "'": "&#39;" }[c]));
 const time = (ms) => isoTimestamp(ms) ? new Date(ms).toLocaleString([], { dateStyle: "medium", timeStyle: "medium" }) : "Time unavailable";
 const shortTime = (ms) => new Date(ms).toLocaleTimeString([], { hour: "2-digit", minute: "2-digit" });
@@ -17,12 +19,12 @@ function message(text, error = false) {
   $("msg").textContent = text;
   $("msg").classList.toggle("err", error);
 }
-async function sessionFetch(path) {
-  let response = await fetch(path, { credentials: "same-origin", cache: "no-store" });
+async function sessionFetch(path, options = {}) {
+  let response = await fetch(path, { ...options, credentials: "same-origin", cache: "no-store" });
   if (response.status === 401) {
     const session = await fetch("/api/camera/session", { method: "POST", credentials: "same-origin" });
     if (!session.ok) throw new Error("Could not open logs. Refresh to try again.");
-    response = await fetch(path, { credentials: "same-origin", cache: "no-store" });
+    response = await fetch(path, { ...options, credentials: "same-origin", cache: "no-store" });
   }
   return response;
 }
@@ -69,6 +71,7 @@ function renderChart(hours, count) {
   $("chartNote").textContent = count ? "Events per hour · local time · hover a point for its count." : "No events captured today. The chart updates when new evidence arrives.";
 }
 function emptyGallery() {
+  selectClaimEvent(null);
   selection++;
   current = null;
   releaseMedia();
@@ -156,6 +159,7 @@ async function loadHistory(append = false) {
     $("eventSelect").value = selected;
     const revision = events.find((event) => event.id === selected).manifest_sha256;
     if (current?.id !== selected || eventRevision !== revision) await openEvent(selected);
+    else selectClaimEvent(current);
   } catch (error) {
     message(error.message, true);
   } finally {
@@ -180,6 +184,7 @@ $("loadMore").addEventListener("click", () => loadHistory(true));
 
 async function openEvent(id) {
   const ticket = ++selection;
+  if (current?.id !== id) selectClaimEvent(null);
   $("verifyBtn").disabled = true;
   $("gallery").className = "gallery-empty";
   $("gallery").innerHTML = '<p class="muted">Loading event evidence…</p>';
@@ -188,6 +193,7 @@ async function openEvent(id) {
     if (ticket !== selection) return;
     releaseMedia();
     current = event;
+    selectClaimEvent(event);
     renderHistory();
     eventRevision = event.manifest_sha256;
     photoIndex = Math.max(0, event.images.findIndex((image) => image.role === "laid"));
@@ -218,6 +224,7 @@ async function openEvent(id) {
   } catch (error) {
     if (ticket === selection) {
       current = null;
+      selectClaimEvent(null);
       eventRevision = null;
       releaseMedia();
       $("gallery").className = "gallery-empty";
